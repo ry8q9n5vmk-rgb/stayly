@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Lamartine Hotel — Misafir Bilgilendirme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --bg-2: #f3f1ec;
+    --surface: rgba(0, 0, 0, 0.03);
+    --border: rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.16);
+    --accent: #b8985a;
+    --accent-soft: #c9a96a;
+    --accent-dim: rgba(184, 152, 90, 0.55);
+    --text: #1a1814;
+    --text-dim: rgba(26, 24, 20, 0.6);
+    --dark: #1a1814;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* soft warm wash */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(1100px 700px at 85% -10%, rgba(184, 152, 90, 0.07), transparent 60%),
+      radial-gradient(900px 600px at -5% 100%, rgba(184, 152, 90, 0.05), transparent 55%);
+    z-index: 0;
+  }
+
+  .reels {
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    z-index: 1;
+  }
+  .reels::-webkit-scrollbar { display: none; }
+
+  .slide {
+    height: 100vh;
+    height: 100dvh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 28px 100px;
+    text-align: center;
+    position: relative;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 440px;
+    animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .icon {
+    font-size: 44px;
+    margin-bottom: 32px;
+    opacity: 0.95;
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.45));
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 2.4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  h1 {
+    font-family: "Fraunces", "Times New Roman", serif;
+    font-size: 44px;
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.8px;
+    margin-bottom: 24px;
+    color: var(--text);
+    font-variation-settings: "opsz" 72;
+  }
+  h1.hero {
+    font-size: 56px;
+    letter-spacing: -1.2px;
+  }
+
+  /* ornament becomes a tiny flat divider */
+  .ornament {
+    width: 32px;
+    height: 1px;
+    background: var(--border-strong);
+    margin: 0 0 24px;
+  }
+  .ornament .line, .ornament .dot { display: none; }
+
+  .subtitle {
+    font-family: "Fraunces", serif;
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    letter-spacing: -0.2px;
+  }
+
+  p.body {
+    font-size: 16px;
+    line-height: 1.65;
+    max-width: 380px;
+    font-weight: 400;
+    color: var(--text-dim);
+    letter-spacing: -0.1px;
+  }
+  p.body + p.body { margin-top: 12px; }
+
+  strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 22px;
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+    backdrop-filter: blur(12px);
+  }
+
+  .time-block {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 8px 0 26px;
+  }
+  .time-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .time-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+  .time-range {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .time-range .dash {
+    width: 18px;
+    height: 1px;
+    background: var(--border-strong);
+  }
+
+  .big-number {
+    font-family: "Fraunces", serif;
+    font-size: 140px;
+    font-weight: 300;
+    line-height: 0.95;
+    margin: 4px 0 28px;
+    color: var(--accent);
+    letter-spacing: -5px;
+    font-variation-settings: "opsz" 144;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    animation: bounce 2.4s ease-in-out infinite;
+    z-index: 3;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .scroll-hint .arrow {
+    width: 1px;
+    height: 22px;
+    background: linear-gradient(180deg, transparent, var(--text-dim));
+    position: relative;
+  }
+  .scroll-hint .arrow::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-right: 1px solid var(--text-dim);
+    border-bottom: 1px solid var(--text-dim);
+    transform: translateX(-50%) rotate(45deg);
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.6; }
+    50% { transform: translateX(-50%) translateY(6px); opacity: 1; }
+  }
+
+  .progress {
+    position: fixed;
+    top: 18px;
+    left: 24px;
+    right: 24px;
+    display: flex;
+    gap: 4px;
+    z-index: 100;
+  }
+  .progress .bar {
+    flex: 1;
+    height: 2px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    transition: background 0.5s ease;
+  }
+  .progress .bar.active {
+    background: var(--accent);
+  }
+
+  .brand {
+    position: absolute;
+    top: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--text);
+    font-weight: 600;
+    z-index: 3;
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+
+  .heart {
+    font-size: 22px;
+    margin-top: 22px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+
+  .signature {
+    margin-top: 32px;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Language switcher — modern pill */
+  .lang-switch {
+    position: fixed;
+    top: 38px;
+    right: 20px;
+    z-index: 101;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--text);
+    user-select: none;
+    transition: all 0.25s ease;
+  }
+  .lang-switch:hover {
+    border-color: var(--border-strong);
+    background: rgba(0, 0, 0, 0.05);
+  }
+  .lang-switch .caret {
+    font-size: 8px;
+    opacity: 0.6;
+    transition: transform 0.2s ease;
+  }
+  .lang-switch.open .caret { transform: rotate(180deg); }
+
+  .lang-menu {
+    position: fixed;
+    top: 76px;
+    right: 20px;
+    z-index: 101;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 14px;
+    padding: 6px;
+    display: none;
+    flex-direction: column;
+    min-width: 150px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    animation: menuIn 0.2s ease;
+  }
+  @keyframes menuIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .lang-menu.open { display: flex; }
+  .lang-menu button {
+    background: none;
+    border: none;
+    color: var(--text);
+    text-align: left;
+    padding: 10px 14px;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.15s ease;
+  }
+  .lang-menu button:hover { background: rgba(0, 0, 0, 0.05); }
+  .lang-menu button.active {
+    color: var(--accent);
+    background: rgba(184, 152, 90, 0.1);
+  }
+
+  html[dir="rtl"] .lang-switch { right: auto; left: 20px; }
+  html[dir="rtl"] .lang-menu { right: auto; left: 20px; }
+  html[dir="rtl"] .lang-menu button { text-align: right; }
+  html[dir="rtl"] .eyebrow { flex-direction: row-reverse; }
+
+  @media (max-width: 380px) {
+    h1 { font-size: 38px; }
+    h1.hero { font-size: 46px; }
+    .big-number { font-size: 110px; }
+  }
+
+  /* ---- CTA button (farewell) ---- */
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    padding: 14px 26px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.2s ease;
+    box-shadow: 0 10px 28px -10px rgba(184, 152, 90, 0.5);
+  }
+  .cta:hover { transform: translateY(-1px); background: #a88847; box-shadow: 0 16px 36px -10px rgba(184, 152, 90, 0.55); }
+  .cta-outline {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    box-shadow: none;
+  }
+  .cta-outline:hover { background: rgba(184, 152, 90, 0.08); color: var(--accent); box-shadow: none; }
+  .cta .arrow { transition: transform 0.2s ease; }
+  .cta:hover .arrow { transform: translateX(4px); }
+  html[dir="rtl"] .cta:hover .arrow { transform: translateX(-4px); }
+
+  /* ---- Explore overlay ---- */
+  .explore {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--bg);
+    color: var(--text);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateY(100%);
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+  }
+  .explore.open { transform: translateY(0); }
+  .explore::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(900px 500px at 90% -5%, rgba(184, 152, 90, 0.06), transparent 55%),
+      radial-gradient(700px 400px at -5% 100%, rgba(184, 152, 90, 0.04), transparent 50%);
+  }
+  .explore-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    background: linear-gradient(180deg, rgba(251,250,247,0.96) 0%, rgba(251,250,247,0.85) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .close-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: background 0.2s ease;
+  }
+  .close-btn:hover { background: rgba(0,0,0,0.06); }
+  .explore-title {
+    font-family: "Fraunces", serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+  }
+
+  .explore-hero {
+    position: relative;
+    z-index: 1;
+    padding: 40px 24px 20px;
+    text-align: center;
+  }
+  .explore-hero .eyebrow { justify-content: center; }
+  .explore-hero h2 {
+    font-family: "Fraunces", serif;
+    font-size: 42px;
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.8px;
+    margin-bottom: 12px;
+    font-variation-settings: "opsz" 72;
+  }
+  .explore-hero p {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .cat-bar {
+    position: sticky;
+    top: 72px;
+    z-index: 2;
+    display: flex;
+    gap: 8px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: linear-gradient(180deg, rgba(251,250,247,0.95) 0%, rgba(251,250,247,0.8) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .cat-bar::-webkit-scrollbar { display: none; }
+  .cat-pill {
+    flex-shrink: 0;
+    padding: 9px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    border-radius: 999px;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .cat-pill:hover { color: var(--text); }
+  .cat-pill.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .places {
+    position: relative;
+    z-index: 1;
+    padding: 22px 20px 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .place {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 18px 20px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  }
+  .place:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(184, 152, 90, 0.12);
+  }
+  .place-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; text-align: start; }
+  .place-name {
+    font-family: "Fraunces", serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+    color: var(--text);
+  }
+  .place-district {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.3px;
+  }
+  .place-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: rgba(184, 152, 90, 0.12);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 14px;
+  }
+  html[dir="rtl"] .place-icon { transform: scaleX(-1); }
+
+  .reception-note {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 600px;
+    margin: 0 auto 60px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, rgba(184, 152, 90, 0.1), rgba(184, 152, 90, 0.04));
+    border: 1px solid rgba(184, 152, 90, 0.25);
+    border-radius: 16px;
+    color: var(--text-dim);
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: 0.1px;
+  }
+  .reception-note .note-icon {
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+  html[dir="rtl"] .reception-note { text-align: right; }
+
+  /* ---- Metro map preview thumbnail (in slide) ---- */
+  .map-thumb {
+    margin-top: 8px;
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 16 / 10;
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #fff;
+    padding: 0;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.25s ease;
+  }
+  .map-thumb:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -12px rgba(184, 152, 90, 0.3); }
+  .map-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .map-thumb-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .map-thumb-icon { font-size: 14px; opacity: 0.9; }
+
+  /* ---- Metro fullscreen overlay ---- */
+  .metro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 250;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .metro-overlay.open { transform: translateY(0); }
+  .metro-head {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(251,250,247,0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .metro-stage {
+    flex: 1;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    background: #f8f7f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .metro-stage img {
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    max-width: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: pinch-zoom;
+  }
+  .menu-stage {
+    flex: 1;
+    background: #1a1814;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .menu-stage img {
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+  }
+</style>
+</head>
+<body>
+
+<button class="lang-switch" id="langSwitch"><span id="langLabel">TR</span><span class="caret">▾</span></button>
+<div class="lang-menu" id="langMenu"></div>
+
+<div class="progress" id="progress"></div>
+
+<div class="reels" id="reels"></div>
+
+<section class="explore" id="explore" aria-hidden="true">
+  <header class="explore-head">
+    <button class="close-btn" id="closeExplore" aria-label="Close">✕</button>
+    <div class="explore-title" id="exploreTitleSmall">İstanbul</div>
+    <div style="width:40px"></div>
+  </header>
+  <div class="explore-hero">
+    <div class="eyebrow" id="exploreEyebrow">KEŞFET</div>
+    <h2 id="exploreTitle">İstanbul'u Keşfedin</h2>
+    <p id="exploreBody">Otelimize yakın öne çıkan mekânlar.</p>
+  </div>
+  <nav class="cat-bar" id="catBar"></nav>
+  <div class="places" id="places"></div>
+  <div class="reception-note" id="receptionNote">
+    <span class="note-icon">💬</span>
+    <span id="receptionNoteText">Yol tarifi veya tavsiye için resepsiyonu arayabilirsiniz.</span>
+  </div>
+</section>
+
+<div class="metro-overlay" id="metroOverlay" aria-hidden="true">
+  <header class="metro-head">
+    <button class="close-btn" id="closeMetro" aria-label="Close">✕</button>
+    <div class="explore-title">Istanbul Rail Systems</div>
+    <a class="close-btn" href="assets/istanbul-metro.pdf" download title="Download PDF">⤓</a>
+  </header>
+  <div class="metro-stage" id="metroStage">
+    <img src="assets/istanbul-metro.png" alt="Istanbul Rail Systems Map" id="metroImg"/>
+  </div>
+</div>
+
+<div class="metro-overlay menu-overlay" id="menuOverlay" aria-hidden="true">
+  <header class="metro-head">
+    <button class="close-btn" id="closeMenu" aria-label="Close">✕</button>
+    <div class="explore-title">Lobby Bar Menu</div>
+    <a class="close-btn" href="assets/bar-menu.pdf" download title="Download PDF">⤓</a>
+  </header>
+  <div class="menu-stage" id="menuStage">
+    <img src="assets/bar-menu-1.png" alt="Lobby Bar Menu — page 1" loading="lazy"/>
+    <img src="assets/bar-menu-2.png" alt="Lobby Bar Menu — page 2" loading="lazy"/>
+  </div>
+</div>
+
+<script>
+  const LANGS = {
+    tr: { name: "Türkçe", code: "TR", dir: "ltr" },
+    en: { name: "English", code: "EN", dir: "ltr" },
+    ar: { name: "العربية", code: "AR", dir: "rtl" },
+    ru: { name: "Русский", code: "RU", dir: "ltr" },
+    de: { name: "Deutsch", code: "DE", dir: "ltr" },
+    fr: { name: "Français", code: "FR", dir: "ltr" },
+    es: { name: "Español", code: "ES", dir: "ltr" },
+    it: { name: "Italiano", code: "IT", dir: "ltr" },
+    fa: { name: "فارسی", code: "FA", dir: "rtl" },
+    bg: { name: "Български", code: "BG", dir: "ltr" },
+    ka: { name: "ქართული", code: "KA", dir: "ltr" },
+    uk: { name: "Українська", code: "UK", dir: "ltr" },
+    pl: { name: "Polski", code: "PL", dir: "ltr" },
+    ro: { name: "Română", code: "RO", dir: "ltr" },
+    nl: { name: "Nederlands", code: "NL", dir: "ltr" }
+  };
+
+  // Slide templates — content varies, layout stays constant.
+  // Each slide declares its icon + which content blocks to render.
+  const SLIDES = [
+    { id: "welcome", icon: "✦", hero: true, brand: true, scrollHint: true, subtitleItalic: true },
+    { id: "contact", icon: "📞", bigNumber: "9" },
+    { id: "wifi", icon: "🛜" },
+    { id: "breakfast", icon: "🥐", timeRange: ["07:00", "10:00"], weekendTimeRange: ["06:30", "10:30"] },
+    { id: "cafe", icon: "🫖" },
+    { id: "amenities", icon: "☕", subtitleItalic: true },
+    { id: "personal", icon: "🪥" },
+    { id: "cleaning", icon: "🧹", timeRange: ["09:00", "15:00"] },
+    { id: "laundry", icon: "👔" },
+    { id: "bar", icon: "🥂", menuButton: true },
+    { id: "safebox", icon: "🔐" },
+    { id: "smoking", icon: "🚭" },
+    { id: "transfer", icon: "✈️" },
+    { id: "sustain", icon: "🌱" },
+    { id: "checkout", icon: "🛎️", bigNumber: "12:00" },
+    { id: "metro", icon: "🚇", mapPreview: true },
+    { id: "farewell", icon: "✦", hero: true, heart: true, signature: true }
+  ];
+
+  const I18N = {
+    tr: {
+      scroll: "Kaydırın",
+      welcome: { eyebrow: "Misafir Bilgilendirme", title: "Hoş Geldiniz", subtitle: "Lamartine Hotel'e", body: "Sizi ağırlamaktan mutluluk duyuyoruz. Konaklamanızı keyifli kılacak bilgiler için yukarı kaydırın." },
+      contact: { eyebrow: "İletişim & Destek", title: "Resepsiyon", body: "Resepsiyon numaramız <strong>9</strong>'dur. Herhangi bir ihtiyacınız veya İstanbul hakkında yerel tavsiyeler için bize <strong>7/24</strong> ulaşabilirsiniz." },
+      wifi: { eyebrow: "İnternet", title: "Wi-Fi Bağlantısı", body: "<strong>Lamartine Hotel</strong> ağına bağlanın. Açılan giriş sayfasında <strong>Misafir Girişi</strong>'ne dokunun ve <strong>oda numaranız</strong> ile <strong>doğum tarihinizi</strong> girerek bağlantıyı tamamlayın." },
+      cafe: { eyebrow: "Le Rêve Café", title: "İkindi Çayı", body: "Lobi'nin arkasında bulunan kafemiz tüm misafirlerimize <strong>ücretsiz</strong> hizmet vermektedir. Geleneksel ikindi çayı her gün <strong>14:00 — 15:00</strong> arasında ücretsiz sunulur." },
+      minibar: { eyebrow: "Minibar", title: "Odanızda Minibar", body: "Her odada minibar bulunmaktadır, fiyat listesi minibarın içindedir. <strong>2 şişe su, çay ve kahve</strong> konaklamanız boyunca ücretsizdir." },
+      safebox: { eyebrow: "Kasa", title: "Güvenli Kasa", body: "Her odada laptop boyutunda kasa bulunmaktadır. Lütfen değerli eşyalarınızı kasanın içinde saklayınız." },
+      smoking: { eyebrow: "Sigara", title: "Sigara İçilmez", body: "Lamartine Hotel <strong>sigara içilmeyen</strong> bir tesistir. Sigara köşesi ana girişin yanındadır. Le Rêve Garden ise sigara içilmeyen bir alandır." },
+      transfer: { eyebrow: "Havalimanı Transferi", title: "Transfer Servisi", body: "Resepsiyondan rezervasyon yapabilirsiniz.<br/>İstanbul Havalimanı tek yön: <strong>70 €</strong><br/>Sabiha Gökçen tek yön: <strong>80 €</strong>" },
+      sustain: { eyebrow: "Sürdürülebilirlik", title: "Daha İyi Bir Dünya", body: "Çevresel sorumluluk ve sürdürülebilirlik konusunda en yüksek standartları takip ediyoruz. Odanızdaki sürdürülebilirlik notunu okuyarak bu yolculuğa katkıda bulunabilirsiniz." },
+      breakfast: { eyebrow: "Kahvaltı", title: "Güne Başlangıç", body: "Kahvaltımız her sabah bu saatler arasında servis edilmektedir.", weekday: "Hafta İçi", weekend: "Hafta Sonu" },
+      amenities: { eyebrow: "Oda İkramları", title: "İkramlarımız", subtitle: "Su, çay & kahve", body: "Odanızda bulunan tüm ikramlar <strong>ücretsizdir</strong> ve sizler için her gün düzenli olarak yenilenmektedir." },
+      personal: { eyebrow: "Kişisel İhtiyaçlar", title: "Talep Üzerine", body: "Diş fırçası, tıraş seti gibi kişisel bakım ürünleri odanızda bulunmamaktadır. İhtiyaç duyduğunuzda <strong>resepsiyonu (9)</strong> arayarak talep edebilirsiniz." },
+      cleaning: { eyebrow: "Oda Temizliği", title: "Temizlik Servisi", body: "Odanızın temizlenmesini isterseniz, bu saatler arasında <strong>kapınızın yanındaki ilgili tuşa</strong> basmanız yeterlidir." },
+      laundry: { eyebrow: "Laundry", title: "Çamaşırhane", body: "Dolabınızın içindeki <strong>formu doldurup</strong> resepsiyonu arayarak bilgi verebilirsiniz. Gerisini biz halledelim." },
+      bar: { eyebrow: "Lobby Bar", title: "Keyifli Bir Mola", body: "Bir şeyler içmek ve dinlenmek için <strong>Lobby katındaki barımızda</strong> sizleri ağırlamaktan mutluluk duyarız.", menu: "Menüyü Görüntüle" },
+      checkout: { eyebrow: "Check-out", title: "Çıkış İşlemleri", body: "Çıkış saatimiz <strong>12:00</strong>'dir. Geç çıkış talepleriniz için lütfen resepsiyonla iletişime geçiniz." },
+      metro: { eyebrow: "Toplu Taşıma", title: "Metro Haritası", body: "İstanbul raylı sistem haritasını görüntülemek için aşağıya dokunun.", open: "Haritayı Aç" },
+      farewell: { eyebrow: "Teşekkür Ederiz", title: "İyi Konaklamalar", body: "Sizi ağırlamaktan mutluluk duyuyoruz. Keyifli bir konaklama dileriz." }
+    },
+    en: {
+      scroll: "Scroll",
+      welcome: { eyebrow: "Guest Information", title: "Welcome", subtitle: "to Lamartine Hotel", body: "We are delighted to host you. Scroll up for information to make your stay more enjoyable." },
+      contact: { eyebrow: "Contact & Support", title: "Reception", body: "Our reception is at extension <strong>9</strong>. For anything you need or for local tips on Istanbul, we are available <strong>24/7</strong>." },
+      wifi: { eyebrow: "Wi-Fi", title: "Get Connected", body: "Connect to the <strong>Lamartine Hotel</strong> network. On the login page that opens, tap <strong>Guest Login</strong> and enter your <strong>room number</strong> and <strong>date of birth</strong> to complete the connection." },
+      cafe: { eyebrow: "Le Rêve Café", title: "Afternoon Tea", body: "Hidden behind the lobby, our café is <strong>complimentary</strong> for all guests. Traditional afternoon tea is served daily <strong>14:00 — 15:00</strong> at no charge." },
+      minibar: { eyebrow: "Minibar", title: "In Your Room", body: "Each room has a minibar with the price list inside. <strong>2 bottles of water, tea and coffee</strong> are complimentary throughout your stay." },
+      safebox: { eyebrow: "Safe Box", title: "Secure Storage", body: "Each room has a laptop-sized safe box. Please keep your valuables inside the safe." },
+      smoking: { eyebrow: "Smoking", title: "Non-Smoking Property", body: "Lamartine Hotel is a <strong>non-smoking</strong> building. The smoking corner is beside the main entrance. Le Rêve Garden is a smoke-free area." },
+      transfer: { eyebrow: "Airport Transfer", title: "Transfer Service", body: "Reservations available at reception.<br/>Istanbul Airport one way: <strong>70 €</strong><br/>Sabiha Gökçen one way: <strong>80 €</strong>" },
+      sustain: { eyebrow: "Sustainability", title: "A Better World", body: "We follow the highest standards in environmental responsibility and sustainability. Please follow the instructions on the sustainability sheet in your room to support our journey." },
+      breakfast: { eyebrow: "Breakfast", title: "A Fine Beginning", body: "Breakfast is served every morning between these hours.", weekday: "Weekdays", weekend: "Weekends" },
+      amenities: { eyebrow: "Room Amenities", title: "Our Compliments", subtitle: "Water, tea & coffee", body: "All refreshments in your room are <strong>complimentary</strong> and are replenished daily for you." },
+      personal: { eyebrow: "Personal Items", title: "Available on Request", body: "Personal care items such as toothbrushes and shaving kits are not provided in the room. If needed, please call <strong>reception (9)</strong> to request them." },
+      cleaning: { eyebrow: "Housekeeping", title: "Room Cleaning", body: "If you'd like your room cleaned, simply press the <strong>corresponding button next to your door</strong> during these hours." },
+      laundry: { eyebrow: "Laundry", title: "Laundry Service", body: "Fill in the <strong>form inside your wardrobe</strong> and call the reception. We'll take care of the rest." },
+      bar: { eyebrow: "Lobby Bar", title: "A Pleasant Break", body: "For a drink or a moment to unwind, we'd love to welcome you at our <strong>bar on the lobby floor</strong>.", menu: "View Menu" },
+      checkout: { eyebrow: "Check-out", title: "Departure", body: "Our check-out time is <strong>12:00</strong>. For late check-out requests, please contact reception." },
+      metro: { eyebrow: "Public Transit", title: "Metro Map", body: "Tap below to view the Istanbul rail systems map.", open: "Open Map" },
+      farewell: { eyebrow: "Thank You", title: "Enjoy Your Stay", body: "It is our pleasure to host you. We wish you a delightful stay." }
+    },
+    ar: {
+      scroll: "مرر",
+      welcome: { eyebrow: "معلومات الضيوف", title: "أهلاً وسهلاً", subtitle: "في فندق لامارتين", body: "يسعدنا استضافتكم. مرر للأعلى للاطلاع على معلومات تجعل إقامتكم أكثر متعة." },
+      contact: { eyebrow: "التواصل والدعم", title: "الاستقبال", body: "رقم الاستقبال الداخلي هو <strong>9</strong>. لأي احتياج أو لنصائح محلية عن إسطنبول، نحن في خدمتكم <strong>24/7</strong>." },
+      wifi: { eyebrow: "واي فاي", title: "اتصل بالإنترنت", body: "اتصل بشبكة <strong>Lamartine Hotel</strong>. في صفحة تسجيل الدخول التي تظهر، اضغط على <strong>دخول الضيوف</strong> وأدخل <strong>رقم غرفتك</strong> و<strong>تاريخ ميلادك</strong> لإكمال الاتصال." },
+      cafe: { eyebrow: "Le Rêve Café", title: "شاي الأصيل", body: "يقع مقهانا خلف اللوبي ومتاح <strong>مجاناً</strong> لجميع الضيوف. يُقدَّم الشاي التقليدي يومياً بين <strong>14:00 — 15:00</strong> دون مقابل." },
+      minibar: { eyebrow: "ميني بار", title: "في غرفتكم", body: "تحتوي كل غرفة على ميني بار مع قائمة الأسعار في الداخل. <strong>زجاجتا ماء وشاي وقهوة</strong> مجانية طوال إقامتكم." },
+      safebox: { eyebrow: "خزنة", title: "تخزين آمن", body: "تحتوي كل غرفة على خزنة بحجم اللابتوب. يرجى الاحتفاظ بأشيائكم الثمينة داخل الخزنة." },
+      smoking: { eyebrow: "التدخين", title: "ممنوع التدخين", body: "فندق لامارتين مبنى <strong>غير مدخن</strong>. ركن التدخين بجانب المدخل الرئيسي. حديقة Le Rêve منطقة خالية من التدخين." },
+      transfer: { eyebrow: "نقل المطار", title: "خدمة النقل", body: "يمكن الحجز من الاستقبال.<br/>مطار إسطنبول باتجاه واحد: <strong>70 €</strong><br/>مطار صبيحة باتجاه واحد: <strong>80 €</strong>" },
+      sustain: { eyebrow: "الاستدامة", title: "عالم أفضل", body: "نلتزم بأعلى معايير المسؤولية البيئية والاستدامة. ساعدونا باتباع التعليمات في ورقة الاستدامة الموجودة في غرفتكم." },
+      breakfast: { eyebrow: "الإفطار", title: "بداية جميلة لليوم", body: "يُقدَّم الإفطار كل صباح بين هذه الساعات.", weekday: "أيام الأسبوع", weekend: "عطلة نهاية الأسبوع" },
+      amenities: { eyebrow: "ضيافة الغرفة", title: "ضيافتنا", subtitle: "ماء وشاي وقهوة", body: "جميع المرطبات في غرفتكم <strong>مجانية</strong> ويتم تجديدها يومياً من أجلكم." },
+      personal: { eyebrow: "الاحتياجات الشخصية", title: "متوفرة عند الطلب", body: "مستلزمات العناية الشخصية مثل فرشاة الأسنان وأدوات الحلاقة غير متوفرة في الغرفة. عند الحاجة يمكنكم طلبها بالاتصال بـ <strong>الاستقبال (9)</strong>." },
+      cleaning: { eyebrow: "خدمة التنظيف", title: "تنظيف الغرفة", body: "إذا رغبتم في تنظيف الغرفة، يكفي الضغط على <strong>الزر المخصص بجانب الباب</strong> خلال هذه الساعات." },
+      laundry: { eyebrow: "المغسلة", title: "خدمة الغسيل", body: "يرجى تعبئة <strong>النموذج الموجود داخل الخزانة</strong> والاتصال بالاستقبال. سنتكفل نحن بالباقي." },
+      bar: { eyebrow: "بار اللوبي", title: "استراحة ممتعة", body: "لاحتساء مشروب أو قضاء لحظة هادئة، يسعدنا استقبالكم في <strong>البار بطابق اللوبي</strong>.", menu: "عرض القائمة" },
+      checkout: { eyebrow: "تسجيل المغادرة", title: "المغادرة", body: "موعد المغادرة هو <strong>12:00</strong>. لطلبات المغادرة المتأخرة، يرجى التواصل مع الاستقبال." },
+      metro: { eyebrow: "النقل العام", title: "خريطة المترو", body: "اضغط أدناه لعرض خريطة شبكة السكك الحديدية في إسطنبول.", open: "افتح الخريطة" },
+      farewell: { eyebrow: "شكراً لكم", title: "إقامة سعيدة", body: "يسعدنا استضافتكم. نتمنى لكم إقامة رائعة." }
+    },
+    ru: {
+      scroll: "Листать",
+      welcome: { eyebrow: "Информация для гостей", title: "Добро пожаловать", subtitle: "в отель Lamartine", body: "Мы рады принимать вас. Листайте вверх, чтобы узнать всё необходимое для комфортного пребывания." },
+      contact: { eyebrow: "Связь и поддержка", title: "Ресепшн", body: "Номер ресепшн — <strong>9</strong>. По любым вопросам или за советами по Стамбулу мы доступны <strong>24/7</strong>." },
+      wifi: { eyebrow: "Wi-Fi", title: "Подключение", body: "Подключитесь к сети <strong>Lamartine Hotel</strong>. На открывшейся странице входа нажмите <strong>Гостевой вход</strong> и введите <strong>номер комнаты</strong> и <strong>дату рождения</strong> для завершения подключения." },
+      cafe: { eyebrow: "Le Rêve Café", title: "Послеобеденный чай", body: "Кафе находится за лобби и доступно <strong>бесплатно</strong> для всех гостей. Традиционный послеобеденный чай подаётся ежедневно с <strong>14:00 до 15:00</strong> бесплатно." },
+      minibar: { eyebrow: "Мини-бар", title: "В вашем номере", body: "В каждом номере есть мини-бар с прейскурантом внутри. <strong>2 бутылки воды, чай и кофе</strong> бесплатны на всё время проживания." },
+      safebox: { eyebrow: "Сейф", title: "Безопасное хранение", body: "В каждом номере есть сейф размером с ноутбук. Пожалуйста, храните ценные вещи внутри сейфа." },
+      smoking: { eyebrow: "Курение", title: "Не курить", body: "Lamartine Hotel — здание <strong>для некурящих</strong>. Зона для курения у главного входа. Le Rêve Garden — бездымная зона." },
+      transfer: { eyebrow: "Трансфер", title: "Аэропорт-трансфер", body: "Бронирование на ресепшн.<br/>Аэропорт Стамбул в одну сторону: <strong>70 €</strong><br/>Аэропорт Сабиха в одну сторону: <strong>80 €</strong>" },
+      sustain: { eyebrow: "Устойчивое развитие", title: "За лучший мир", body: "Мы следуем высоким стандартам экологической ответственности и устойчивого развития. Пожалуйста, следуйте инструкциям на листе устойчивости в вашем номере." },
+      breakfast: { eyebrow: "Завтрак", title: "Доброе начало дня", body: "Завтрак подаётся каждое утро в указанные часы.", weekday: "Будни", weekend: "Выходные" },
+      amenities: { eyebrow: "В номере", title: "Наши комплименты", subtitle: "Вода, чай и кофе", body: "Все угощения в вашем номере <strong>бесплатны</strong> и ежедневно обновляются для вас." },
+      personal: { eyebrow: "Личные принадлежности", title: "По запросу", body: "Принадлежности личной гигиены, такие как зубная щётка и бритвенный набор, в номере не предоставляются. При необходимости позвоните на <strong>ресепшн (9)</strong>." },
+      cleaning: { eyebrow: "Уборка", title: "Уборка номера", body: "Если хотите, чтобы номер убрали, просто нажмите <strong>соответствующую кнопку у двери</strong> в указанные часы." },
+      laundry: { eyebrow: "Прачечная", title: "Услуга прачечной", body: "Заполните <strong>форму в шкафу</strong> и позвоните на ресепшн. Остальное мы сделаем сами." },
+      bar: { eyebrow: "Лобби-бар", title: "Приятная пауза", body: "Чтобы выпить бокал или просто отдохнуть, мы будем рады видеть вас в <strong>баре на этаже лобби</strong>.", menu: "Посмотреть меню" },
+      checkout: { eyebrow: "Выезд", title: "Выезд из отеля", body: "Время выезда — <strong>12:00</strong>. По запросам позднего выезда обращайтесь на ресепшн." },
+      metro: { eyebrow: "Транспорт", title: "Карта метро", body: "Нажмите ниже, чтобы посмотреть карту рельсового транспорта Стамбула.", open: "Открыть карту" },
+      farewell: { eyebrow: "Благодарим вас", title: "Приятного пребывания", body: "Нам приятно принимать вас. Желаем чудесного отдыха." }
+    },
+    de: {
+      scroll: "Scrollen",
+      welcome: { eyebrow: "Gästeinformation", title: "Herzlich Willkommen", subtitle: "im Lamartine Hotel", body: "Wir freuen uns, Sie bei uns begrüßen zu dürfen. Scrollen Sie nach oben für Hinweise zu einem angenehmen Aufenthalt." },
+      contact: { eyebrow: "Kontakt & Hilfe", title: "Rezeption", body: "Die Rezeption erreichen Sie unter der <strong>9</strong>. Für jedes Anliegen oder Istanbul-Tipps sind wir <strong>rund um die Uhr</strong> für Sie da." },
+      wifi: { eyebrow: "WLAN", title: "Verbinden Sie Sich", body: "Verbinden Sie sich mit dem Netzwerk <strong>Lamartine Hotel</strong>. Tippen Sie auf der Anmeldeseite auf <strong>Gast-Login</strong> und geben Sie Ihre <strong>Zimmernummer</strong> und Ihr <strong>Geburtsdatum</strong> ein, um die Verbindung herzustellen." },
+      cafe: { eyebrow: "Le Rêve Café", title: "Nachmittagstee", body: "Hinter der Lobby gelegen, ist unser Café für alle Gäste <strong>kostenlos</strong>. Traditioneller Nachmittagstee wird täglich von <strong>14:00 — 15:00</strong> kostenlos serviert." },
+      minibar: { eyebrow: "Minibar", title: "In Ihrem Zimmer", body: "Jedes Zimmer verfügt über eine Minibar mit Preisliste im Inneren. <strong>2 Flaschen Wasser, Tee und Kaffee</strong> sind während Ihres Aufenthalts kostenlos." },
+      safebox: { eyebrow: "Safe", title: "Sichere Aufbewahrung", body: "Jedes Zimmer verfügt über einen Safe in Laptop-Größe. Bitte bewahren Sie Ihre Wertsachen im Safe auf." },
+      smoking: { eyebrow: "Rauchen", title: "Nichtraucher-Hotel", body: "Lamartine Hotel ist ein <strong>Nichtraucherhaus</strong>. Die Raucherecke befindet sich neben dem Haupteingang. Le Rêve Garden ist rauchfreier Bereich." },
+      transfer: { eyebrow: "Flughafentransfer", title: "Transferservice", body: "Reservierung an der Rezeption.<br/>Flughafen Istanbul einfach: <strong>70 €</strong><br/>Sabiha Gökçen einfach: <strong>80 €</strong>" },
+      sustain: { eyebrow: "Nachhaltigkeit", title: "Eine bessere Welt", body: "Wir folgen höchsten Standards in Umweltverantwortung und Nachhaltigkeit. Bitte unterstützen Sie uns, indem Sie die Hinweise auf dem Nachhaltigkeitsblatt in Ihrem Zimmer befolgen." },
+      breakfast: { eyebrow: "Frühstück", title: "Guter Start in den Tag", body: "Das Frühstück wird täglich zu diesen Zeiten serviert.", weekday: "Wochentags", weekend: "Wochenende" },
+      amenities: { eyebrow: "Zimmerausstattung", title: "Unsere Aufmerksamkeiten", subtitle: "Wasser, Tee & Kaffee", body: "Alle Erfrischungen in Ihrem Zimmer sind <strong>kostenlos</strong> und werden täglich für Sie aufgefüllt." },
+      personal: { eyebrow: "Persönliche Artikel", title: "Auf Anfrage Erhältlich", body: "Persönliche Pflegeartikel wie Zahnbürste und Rasierset sind nicht im Zimmer vorhanden. Bei Bedarf rufen Sie bitte die <strong>Rezeption (9)</strong> an." },
+      cleaning: { eyebrow: "Zimmerreinigung", title: "Reinigungsservice", body: "Wünschen Sie Reinigung, drücken Sie zu diesen Zeiten einfach die <strong>entsprechende Taste neben Ihrer Tür</strong>." },
+      laundry: { eyebrow: "Wäscherei", title: "Wäscheservice", body: "Füllen Sie das <strong>Formular in Ihrem Schrank</strong> aus und rufen Sie die Rezeption an. Den Rest übernehmen wir." },
+      bar: { eyebrow: "Lobby Bar", title: "Eine angenehme Pause", body: "Für ein Getränk oder einen Moment Entspannung freuen wir uns auf Sie in unserer <strong>Bar in der Lobby</strong>.", menu: "Karte Ansehen" },
+      checkout: { eyebrow: "Check-out", title: "Abreise", body: "Unsere Check-out-Zeit ist <strong>12:00</strong>. Für späteren Check-out wenden Sie sich bitte an die Rezeption." },
+      metro: { eyebrow: "Nahverkehr", title: "Metro-Plan", body: "Tippen Sie unten, um den Istanbul-Schienennetzplan anzuzeigen.", open: "Karte Öffnen" },
+      farewell: { eyebrow: "Vielen Dank", title: "Angenehmen Aufenthalt", body: "Es ist uns eine Freude, Sie zu beherbergen. Wir wünschen Ihnen einen wunderschönen Aufenthalt." }
+    },
+    fr: {
+      scroll: "Faire défiler",
+      welcome: { eyebrow: "Information des Hôtes", title: "Bienvenue", subtitle: "à l'Hôtel Lamartine", body: "Nous sommes ravis de vous accueillir. Faites défiler vers le haut pour connaître les informations utiles à votre séjour." },
+      contact: { eyebrow: "Contact & Assistance", title: "Réception", body: "La réception est joignable au <strong>9</strong>. Pour toute demande ou conseil sur Istanbul, nous sommes à votre disposition <strong>24h/24</strong>." },
+      wifi: { eyebrow: "Wi-Fi", title: "Connectez-Vous", body: "Connectez-vous au réseau <strong>Lamartine Hotel</strong>. Sur la page de connexion qui s'ouvre, appuyez sur <strong>Connexion Invité</strong> et saisissez votre <strong>numéro de chambre</strong> et votre <strong>date de naissance</strong> pour terminer." },
+      cafe: { eyebrow: "Le Rêve Café", title: "Thé de l'Après-Midi", body: "Caché derrière le lobby, notre café est <strong>gratuit</strong> pour tous les hôtes. Le thé traditionnel est servi chaque jour de <strong>14h00 — 15h00</strong> gratuitement." },
+      minibar: { eyebrow: "Minibar", title: "Dans Votre Chambre", body: "Chaque chambre dispose d'un minibar avec la liste des prix à l'intérieur. <strong>2 bouteilles d'eau, thé et café</strong> sont offerts durant votre séjour." },
+      safebox: { eyebrow: "Coffre-Fort", title: "Conservation Sécurisée", body: "Chaque chambre dispose d'un coffre-fort de la taille d'un ordinateur portable. Veuillez y conserver vos objets de valeur." },
+      smoking: { eyebrow: "Tabagisme", title: "Établissement Non-Fumeur", body: "L'Hôtel Lamartine est un bâtiment <strong>non-fumeur</strong>. L'espace fumeur se trouve à côté de l'entrée principale. Le Rêve Garden est une zone non-fumeur." },
+      transfer: { eyebrow: "Transfert Aéroport", title: "Service de Transfert", body: "Réservation à la réception.<br/>Aéroport d'Istanbul aller simple : <strong>70 €</strong><br/>Sabiha Gökçen aller simple : <strong>80 €</strong>" },
+      sustain: { eyebrow: "Durabilité", title: "Un Monde Meilleur", body: "Nous suivons les normes les plus élevées en matière de responsabilité environnementale et de durabilité. Aidez-nous en suivant les instructions de la fiche durabilité dans votre chambre." },
+      breakfast: { eyebrow: "Petit-Déjeuner", title: "Un Beau Début", body: "Le petit-déjeuner est servi chaque matin durant ces horaires.", weekday: "Semaine", weekend: "Week-end" },
+      amenities: { eyebrow: "Commodités", title: "Nos Attentions", subtitle: "Eau, thé & café", body: "Tous les rafraîchissements dans votre chambre sont <strong>gratuits</strong> et réapprovisionnés chaque jour." },
+      personal: { eyebrow: "Articles Personnels", title: "Disponibles Sur Demande", body: "Les articles d'hygiène personnelle tels que brosse à dents et nécessaire de rasage ne sont pas fournis dans la chambre. Au besoin, appelez la <strong>réception (9)</strong>." },
+      cleaning: { eyebrow: "Ménage", title: "Nettoyage de la Chambre", body: "Pour faire nettoyer la chambre, appuyez simplement sur le <strong>bouton prévu près de la porte</strong> durant ces horaires." },
+      laundry: { eyebrow: "Blanchisserie", title: "Service Blanchisserie", body: "Remplissez le <strong>formulaire dans votre armoire</strong> et appelez la réception. Nous nous occupons du reste." },
+      bar: { eyebrow: "Lobby Bar", title: "Une Pause Agréable", body: "Pour un verre ou un moment de détente, nous serions heureux de vous accueillir à notre <strong>bar du lobby</strong>.", menu: "Voir le Menu" },
+      checkout: { eyebrow: "Départ", title: "Départ de l'Hôtel", body: "L'heure de départ est <strong>12h00</strong>. Pour un départ tardif, veuillez contacter la réception." },
+      metro: { eyebrow: "Transport", title: "Plan du Métro", body: "Appuyez ci-dessous pour afficher le plan du réseau ferroviaire d'Istanbul.", open: "Ouvrir le Plan" },
+      farewell: { eyebrow: "Merci", title: "Bon Séjour", body: "C'est un plaisir de vous recevoir. Nous vous souhaitons un excellent séjour." }
+    },
+    es: {
+      scroll: "Deslizar",
+      welcome: { eyebrow: "Información para Huéspedes", title: "Bienvenidos", subtitle: "al Hotel Lamartine", body: "Es un placer recibirles. Deslice hacia arriba para ver la información que hará su estancia más agradable." },
+      contact: { eyebrow: "Contacto y Soporte", title: "Recepción", body: "La recepción está en la extensión <strong>9</strong>. Para cualquier necesidad o consejos sobre Estambul, estamos disponibles <strong>24/7</strong>." },
+      wifi: { eyebrow: "Wi-Fi", title: "Conéctese", body: "Conéctese a la red <strong>Lamartine Hotel</strong>. En la página de inicio de sesión que aparece, pulse <strong>Acceso de Huésped</strong> e introduzca su <strong>número de habitación</strong> y su <strong>fecha de nacimiento</strong> para completar la conexión." },
+      cafe: { eyebrow: "Le Rêve Café", title: "Té de la Tarde", body: "Detrás del lobby, nuestro café es <strong>gratuito</strong> para todos los huéspedes. El té tradicional se sirve a diario de <strong>14:00 — 15:00</strong> sin cargo." },
+      minibar: { eyebrow: "Minibar", title: "En Su Habitación", body: "Cada habitación tiene un minibar con la lista de precios dentro. <strong>2 botellas de agua, té y café</strong> son gratuitos durante su estancia." },
+      safebox: { eyebrow: "Caja Fuerte", title: "Almacenamiento Seguro", body: "Cada habitación tiene una caja fuerte tamaño portátil. Por favor guarde sus objetos de valor en su interior." },
+      smoking: { eyebrow: "Fumar", title: "Edificio Libre de Humo", body: "Lamartine Hotel es un edificio <strong>libre de humo</strong>. La zona de fumadores está junto a la entrada principal. Le Rêve Garden es zona libre de humo." },
+      transfer: { eyebrow: "Traslado al Aeropuerto", title: "Servicio de Traslado", body: "Reservas en recepción.<br/>Aeropuerto de Estambul ida: <strong>70 €</strong><br/>Sabiha Gökçen ida: <strong>80 €</strong>" },
+      sustain: { eyebrow: "Sostenibilidad", title: "Un Mundo Mejor", body: "Seguimos los más altos estándares de responsabilidad ambiental y sostenibilidad. Ayúdenos siguiendo las instrucciones de la hoja de sostenibilidad en su habitación." },
+      breakfast: { eyebrow: "Desayuno", title: "Un Buen Comienzo", body: "El desayuno se sirve cada mañana en este horario.", weekday: "Entre Semana", weekend: "Fin de Semana" },
+      amenities: { eyebrow: "Servicios de Habitación", title: "Nuestras Atenciones", subtitle: "Agua, té y café", body: "Todas las atenciones en su habitación son <strong>gratuitas</strong> y se reponen diariamente." },
+      personal: { eyebrow: "Artículos Personales", title: "Disponibles Bajo Petición", body: "Los artículos de higiene personal como cepillo de dientes y kit de afeitado no se proporcionan en la habitación. Si los necesita, llame a <strong>recepción (9)</strong>." },
+      cleaning: { eyebrow: "Limpieza", title: "Limpieza de la Habitación", body: "Si desea que limpien la habitación, pulse el <strong>botón correspondiente junto a su puerta</strong> en este horario." },
+      laundry: { eyebrow: "Lavandería", title: "Servicio de Lavandería", body: "Complete el <strong>formulario dentro del armario</strong> y llame a recepción. Nosotros nos encargamos del resto." },
+      bar: { eyebrow: "Lobby Bar", title: "Una Agradable Pausa", body: "Para tomar algo o un momento de descanso, será un placer recibirles en nuestro <strong>bar del lobby</strong>.", menu: "Ver Menú" },
+      checkout: { eyebrow: "Check-out", title: "Salida", body: "La hora de salida es <strong>12:00</strong>. Para salidas tardías, por favor contacte con recepción." },
+      metro: { eyebrow: "Transporte", title: "Mapa del Metro", body: "Toque abajo para ver el mapa del sistema ferroviario de Estambul.", open: "Abrir Mapa" },
+      farewell: { eyebrow: "Gracias", title: "Feliz Estancia", body: "Es un placer recibirles. Les deseamos una estancia maravillosa." }
+    },
+    it: {
+      scroll: "Scorri",
+      welcome: { eyebrow: "Informazioni per gli Ospiti", title: "Benvenuti", subtitle: "al Lamartine Hotel", body: "Siamo lieti di ospitarvi. Scorrete verso l'alto per le informazioni utili al vostro soggiorno." },
+      contact: { eyebrow: "Contatti & Assistenza", title: "Reception", body: "La reception è all'interno <strong>9</strong>. Per qualsiasi esigenza o consigli su Istanbul, siamo a disposizione <strong>24/7</strong>." },
+      wifi: { eyebrow: "Wi-Fi", title: "Connettiti", body: "Connettiti alla rete <strong>Lamartine Hotel</strong>. Nella pagina di accesso che si apre, tocca <strong>Accesso Ospite</strong> e inserisci il <strong>numero della tua camera</strong> e la <strong>data di nascita</strong> per completare la connessione." },
+      cafe: { eyebrow: "Le Rêve Café", title: "Tè del Pomeriggio", body: "Dietro la lobby, il nostro café è <strong>gratuito</strong> per tutti gli ospiti. Il tè tradizionale viene servito ogni giorno dalle <strong>14:00 — 15:00</strong> gratuitamente." },
+      minibar: { eyebrow: "Minibar", title: "Nella Tua Camera", body: "Ogni camera è dotata di minibar con listino prezzi all'interno. <strong>2 bottiglie d'acqua, tè e caffè</strong> sono gratuiti per tutto il soggiorno." },
+      safebox: { eyebrow: "Cassaforte", title: "Custodia Sicura", body: "Ogni camera ha una cassaforte delle dimensioni di un laptop. Vi preghiamo di conservare i vostri oggetti di valore al suo interno." },
+      smoking: { eyebrow: "Fumo", title: "Struttura Non Fumatori", body: "Lamartine Hotel è un edificio <strong>non fumatori</strong>. L'angolo fumatori è accanto all'ingresso principale. Le Rêve Garden è area non fumatori." },
+      transfer: { eyebrow: "Transfer Aeroporto", title: "Servizio Transfer", body: "Prenotazioni alla reception.<br/>Aeroporto di Istanbul sola andata: <strong>70 €</strong><br/>Sabiha Gökçen sola andata: <strong>80 €</strong>" },
+      sustain: { eyebrow: "Sostenibilità", title: "Un Mondo Migliore", body: "Seguiamo i più alti standard di responsabilità ambientale e sostenibilità. Sosteneteci seguendo le istruzioni del foglio sostenibilità in camera." },
+      breakfast: { eyebrow: "Colazione", title: "Un Bel Inizio", body: "La colazione viene servita ogni mattina in questi orari.", weekday: "Feriali", weekend: "Weekend" },
+      amenities: { eyebrow: "Servizi in Camera", title: "Le Nostre Cortesie", subtitle: "Acqua, tè e caffè", body: "Tutti i rinfreschi in camera sono <strong>gratuiti</strong> e vengono riforniti ogni giorno per voi." },
+      personal: { eyebrow: "Articoli Personali", title: "Disponibili su Richiesta", body: "Articoli per la cura personale come spazzolino e kit da barba non sono forniti in camera. Se necessari, chiamate la <strong>reception (9)</strong>." },
+      cleaning: { eyebrow: "Pulizie", title: "Pulizia della Camera", body: "Se desiderate la pulizia, basta premere il <strong>pulsante dedicato accanto alla porta</strong> in questi orari." },
+      laundry: { eyebrow: "Lavanderia", title: "Servizio Lavanderia", body: "Compilate il <strong>modulo nell'armadio</strong> e chiamate la reception. Al resto pensiamo noi." },
+      bar: { eyebrow: "Lobby Bar", title: "Una Pausa Piacevole", body: "Per un drink o un momento di relax, saremo felici di accogliervi al nostro <strong>bar nella lobby</strong>.", menu: "Vedi Menu" },
+      checkout: { eyebrow: "Check-out", title: "Partenza", body: "L'orario di check-out è le <strong>12:00</strong>. Per richieste di check-out posticipato, contattate la reception." },
+      metro: { eyebrow: "Trasporti", title: "Mappa Metro", body: "Tocca sotto per visualizzare la mappa della rete ferroviaria di Istanbul.", open: "Apri Mappa" },
+      farewell: { eyebrow: "Grazie", title: "Buon Soggiorno", body: "È un piacere ospitarvi. Vi auguriamo un soggiorno meraviglioso." }
+    },
+    fa: {
+      scroll: "اسکرول کنید",
+      welcome: { eyebrow: "اطلاعات مهمان", title: "خوش آمدید", subtitle: "به هتل لامارتین", body: "از اینکه میزبان شما هستیم خوشحالیم. برای اطلاعاتی که اقامت شما را دلپذیرتر می‌کند به بالا اسکرول کنید." },
+      contact: { eyebrow: "تماس و پشتیبانی", title: "پذیرش", body: "شماره داخلی پذیرش <strong>9</strong> است. برای هر نیاز یا توصیه درباره استانبول، ما <strong>۲۴ ساعته</strong> در خدمت شما هستیم." },
+      wifi: { eyebrow: "اینترنت", title: "اتصال به وای-فای", body: "به شبکه <strong>Lamartine Hotel</strong> متصل شوید. در صفحه ورودی روی <strong>ورود مهمان</strong> بزنید و <strong>شماره اتاق</strong> و <strong>تاریخ تولد</strong> خود را وارد کنید." },
+      cafe: { eyebrow: "Le Rêve Café", title: "چای عصرانه", body: "کافه ما در پشت لابی برای همه مهمانان <strong>رایگان</strong> است. چای عصرانه سنتی هر روز از <strong>14:00 — 15:00</strong> به‌صورت رایگان سرو می‌شود." },
+      safebox: { eyebrow: "گاوصندوق", title: "نگهداری امن", body: "هر اتاق یک گاوصندوق به اندازه لپ‌تاپ دارد. لطفاً اشیای قیمتی خود را در آن نگه دارید." },
+      smoking: { eyebrow: "سیگار", title: "ممنوعیت سیگار", body: "هتل لامارتین یک ساختمان <strong>بدون دود</strong> است. گوشه سیگار کنار ورودی اصلی قرار دارد. باغ Le Rêve منطقه‌ای بدون دود است." },
+      transfer: { eyebrow: "ترانسفر فرودگاه", title: "خدمات ترانسفر", body: "از پذیرش رزرو کنید.<br/>فرودگاه استانبول یک‌طرفه: <strong>70 €</strong><br/>صبیحه گوکچن یک‌طرفه: <strong>80 €</strong>" },
+      sustain: { eyebrow: "پایداری", title: "دنیایی بهتر", body: "ما بالاترین استانداردهای مسئولیت زیست‌محیطی و پایداری را دنبال می‌کنیم. لطفاً با پیروی از دستورالعمل‌های برگه پایداری اتاق، از این مسیر حمایت کنید." },
+      breakfast: { eyebrow: "صبحانه", title: "آغاز خوب روز", body: "صبحانه هر روز صبح در این ساعات سرو می‌شود.", weekday: "روزهای هفته", weekend: "آخر هفته" },
+      amenities: { eyebrow: "ضیافت اتاق", title: "پذیرایی ما", subtitle: "آب، چای و قهوه", body: "تمام نوشیدنی‌های موجود در اتاق <strong>رایگان</strong> هستند و روزانه برای شما تجدید می‌شوند." },
+      personal: { eyebrow: "نیازهای شخصی", title: "به درخواست", body: "وسایل بهداشت شخصی مانند مسواک و کیت اصلاح در اتاق موجود نیست. در صورت نیاز با <strong>پذیرش (9)</strong> تماس بگیرید." },
+      cleaning: { eyebrow: "نظافت", title: "نظافت اتاق", body: "اگر مایلید اتاق تمیز شود، در این ساعات کافی است <strong>دکمه کنار درب</strong> را فشار دهید." },
+      laundry: { eyebrow: "لاندری", title: "خدمات خشک‌شویی", body: "<strong>فرم داخل کمد</strong> را پر کنید و با پذیرش تماس بگیرید. بقیه را به ما بسپارید." },
+      bar: { eyebrow: "بار لابی", title: "استراحت دلپذیر", body: "برای نوشیدنی یا لحظه‌ای آرامش، با خوشحالی شما را در <strong>بار طبقه لابی</strong> پذیرا هستیم.", menu: "مشاهده منو" },
+      checkout: { eyebrow: "تسویه حساب", title: "خروج", body: "ساعت تسویه حساب <strong>12:00</strong> است. برای درخواست تسویه دیرتر، با پذیرش تماس بگیرید." },
+      metro: { eyebrow: "حمل و نقل عمومی", title: "نقشه مترو", body: "برای مشاهده نقشه سیستم ریلی استانبول، روی پایین ضربه بزنید.", open: "باز کردن نقشه" },
+      farewell: { eyebrow: "از شما متشکریم", title: "اقامت خوش", body: "ما با کمال میل میزبان شما هستیم. اقامتی دلپذیر برایتان آرزو می‌کنیم." }
+    },
+    bg: {
+      scroll: "Превъртете",
+      welcome: { eyebrow: "Информация за гости", title: "Добре дошли", subtitle: "в Lamartine Hotel", body: "За нас е удоволствие да ви посрещнем. Превъртете нагоре за информация, която ще направи престоя ви по-приятен." },
+      contact: { eyebrow: "Контакт и подкрепа", title: "Рецепция", body: "Вътрешен номер на рецепцията: <strong>9</strong>. За всяка нужда или съвети за Истанбул сме на разположение <strong>24/7</strong>." },
+      wifi: { eyebrow: "Wi-Fi", title: "Свържете се", body: "Свържете се с мрежата <strong>Lamartine Hotel</strong>. На страницата за вход натиснете <strong>Достъп за гости</strong> и въведете <strong>номера на стаята</strong> и <strong>датата на раждане</strong>." },
+      cafe: { eyebrow: "Le Rêve Café", title: "Следобеден чай", body: "Кафето ни зад лобито е <strong>безплатно</strong> за всички гости. Традиционен следобеден чай се сервира всеки ден <strong>14:00 — 15:00</strong>." },
+      safebox: { eyebrow: "Сейф", title: "Безопасно съхранение", body: "Във всяка стая има сейф с размер на лаптоп. Моля, съхранявайте ценностите си вътре." },
+      smoking: { eyebrow: "Пушене", title: "Без пушене", body: "Lamartine Hotel е <strong>сграда без пушене</strong>. Зоната за пушене е до главния вход. Le Rêve Garden е зона без пушене." },
+      transfer: { eyebrow: "Летищен трансфер", title: "Услуга трансфер", body: "Резервация на рецепцията.<br/>Летище Истанбул в една посока: <strong>70 €</strong><br/>Сабиха Гьокчен в една посока: <strong>80 €</strong>" },
+      sustain: { eyebrow: "Устойчивост", title: "По-добър свят", body: "Следваме най-високите стандарти за екологична отговорност и устойчивост. Моля, помогнете ни, като следвате указанията в листа за устойчивост в стаята." },
+      breakfast: { eyebrow: "Закуска", title: "Прекрасно начало", body: "Закуската се сервира всяка сутрин в тези часове.", weekday: "Делнични", weekend: "Уикенд" },
+      amenities: { eyebrow: "Удобства в стаята", title: "Нашите комплименти", subtitle: "Вода, чай и кафе", body: "Всички напитки в стаята са <strong>безплатни</strong> и се попълват ежедневно." },
+      personal: { eyebrow: "Лични вещи", title: "При поискване", body: "Артикули за лична хигиена като четка за зъби и комплект за бръснене не са в стаята. При нужда се обадете на <strong>рецепцията (9)</strong>." },
+      cleaning: { eyebrow: "Почистване", title: "Почистване на стаята", body: "Ако желаете почистване, в тези часове просто натиснете <strong>съответния бутон до вратата</strong>." },
+      laundry: { eyebrow: "Пране", title: "Услуга пране", body: "Попълнете <strong>формуляра в гардероба</strong> и се обадете на рецепцията. Останалото е наша грижа." },
+      bar: { eyebrow: "Лоби бар", title: "Приятна почивка", body: "За питие или момент за отдих, ще ви приветстваме в нашия <strong>бар на лоби етажа</strong>.", menu: "Виж менюто" },
+      checkout: { eyebrow: "Освобождаване", title: "Освобождаване", body: "Часът за освобождаване е <strong>12:00</strong>. За късно освобождаване, моля свържете се с рецепцията." },
+      metro: { eyebrow: "Транспорт", title: "Карта на метрото", body: "Натиснете отдолу, за да видите картата на железопътната мрежа на Истанбул.", open: "Отвори картата" },
+      farewell: { eyebrow: "Благодарим ви", title: "Приятен престой", body: "Удоволствие е да ви посрещнем. Желаем ви прекрасен престой." }
+    },
+    ka: {
+      scroll: "გადახვევა",
+      welcome: { eyebrow: "ინფორმაცია სტუმრებისთვის", title: "მოგესალმებით", subtitle: "Lamartine Hotel-ში", body: "სიამოვნებით გვასპინძლებთ. გადახვიეთ ზემოთ ინფორმაციისთვის, რომელიც თქვენს ყოფნას უფრო სასიამოვნოს გახდის." },
+      contact: { eyebrow: "კონტაქტი და დახმარება", title: "მიღება", body: "მიღების შიდა ნომერია <strong>9</strong>. ნებისმიერი საჭიროებისთვის ან სტამბოლის შესახებ რჩევებისთვის ჩვენ ხელმისაწვდომი ვართ <strong>24/7</strong>." },
+      wifi: { eyebrow: "Wi-Fi", title: "დაკავშირება", body: "დაუკავშირდით ქსელს <strong>Lamartine Hotel</strong>. შესვლის გვერდზე დააჭირეთ <strong>სტუმრის შესვლა</strong> და შეიყვანეთ თქვენი <strong>ოთახის ნომერი</strong> და <strong>დაბადების თარიღი</strong>." },
+      cafe: { eyebrow: "Le Rêve Café", title: "შუადღის ჩაი", body: "ჩვენი კაფე ლობის უკან <strong>უფასოა</strong> ყველა სტუმრისთვის. ტრადიციული შუადღის ჩაი ყოველდღე იდგმება <strong>14:00 — 15:00</strong>-ში." },
+      safebox: { eyebrow: "სეიფი", title: "უსაფრთხო შენახვა", body: "თითოეულ ოთახში არის ლეპტოპის ზომის სეიფი. გთხოვთ, ფასეული ნივთები შიგნით შეინახოთ." },
+      smoking: { eyebrow: "მოწევა", title: "მოწევა აკრძალულია", body: "Lamartine Hotel <strong>მოწევის გარეშე</strong> შენობაა. მოწევის კუთხე მთავარი შესასვლელის გვერდითაა. Le Rêve Garden მოწევის გარეშე ზონაა." },
+      transfer: { eyebrow: "აეროპორტის ტრანსფერი", title: "ტრანსფერის სერვისი", body: "დაჯავშნა მიღებიდან.<br/>სტამბოლის აეროპორტი ერთი მიმართულებით: <strong>70 €</strong><br/>საბიჰა გოქჩენი ერთი მიმართულებით: <strong>80 €</strong>" },
+      sustain: { eyebrow: "მდგრადობა", title: "უკეთესი სამყაროსთვის", body: "ჩვენ მივყვებით უმაღლეს სტანდარტებს გარემოსდაცვით პასუხისმგებლობასა და მდგრადობაში. გთხოვთ, დაგვეხმაროთ ოთახში არსებული მდგრადობის ფურცლის მითითებების შესრულებით." },
+      breakfast: { eyebrow: "საუზმე", title: "კარგი დასაწყისი", body: "საუზმე ყოველდღე ამ საათებში სერვირდება.", weekday: "სამუშაო დღეები", weekend: "შაბათ-კვირა" },
+      amenities: { eyebrow: "ოთახის შეთავაზებები", title: "ჩვენი ყურადღება", subtitle: "წყალი, ჩაი და ყავა", body: "ოთახში არსებული ყველა გამაგრილებელი <strong>უფასოა</strong> და ყოველდღიურად განახლდება." },
+      personal: { eyebrow: "პირადი საჭიროებები", title: "მოთხოვნით", body: "პირადი ჰიგიენის ნივთები, როგორიცაა კბილის ჯაგრისი და გასაპარსი ნაკრები, ოთახში არ არის. საჭიროების შემთხვევაში დაუკავშირდით <strong>მიღებას (9)</strong>." },
+      cleaning: { eyebrow: "დასუფთავება", title: "ოთახის დასუფთავება", body: "თუ გსურთ ოთახის დასუფთავება, ამ საათებში დააჭირეთ <strong>კარის გვერდით განთავსებულ ღილაკს</strong>." },
+      laundry: { eyebrow: "სარეცხი", title: "სარეცხის სერვისი", body: "შეავსეთ <strong>კარადაში მოთავსებული ფორმა</strong> და დაუკავშირდით მიღებას. დანარჩენი ჩვენ ვიზრუნებთ." },
+      bar: { eyebrow: "ლობი ბარი", title: "სასიამოვნო შესვენება", body: "სასმელისთვის ან მოდუნებისთვის სიამოვნებით მიგიღებთ ჩვენს <strong>ლობის სართულის ბარში</strong>.", menu: "მენიუს ნახვა" },
+      checkout: { eyebrow: "გასვლა", title: "გასვლა", body: "გასვლის დროა <strong>12:00</strong>. გვიანი გასვლისთვის გთხოვთ დაუკავშირდეთ მიღებას." },
+      metro: { eyebrow: "ტრანსპორტი", title: "მეტროს რუკა", body: "სტამბოლის სარკინიგზო რუკის სანახავად დააჭირეთ ქვემოთ.", open: "რუკის გახსნა" },
+      farewell: { eyebrow: "გმადლობთ", title: "სასიამოვნო ყოფნა", body: "ჩვენთვის სიამოვნებაა თქვენი მასპინძლობა. გისურვებთ შესანიშნავ ყოფნას." }
+    },
+    uk: {
+      scroll: "Гортайте",
+      welcome: { eyebrow: "Інформація для гостей", title: "Ласкаво просимо", subtitle: "до Lamartine Hotel", body: "Ми раді приймати вас. Гортайте вгору для інформації, яка зробить ваше перебування приємнішим." },
+      contact: { eyebrow: "Контакт і підтримка", title: "Рецепція", body: "Внутрішній номер рецепції — <strong>9</strong>. З будь-яких питань або порад щодо Стамбула ми доступні <strong>24/7</strong>." },
+      wifi: { eyebrow: "Wi-Fi", title: "Підключіться", body: "Підключіться до мережі <strong>Lamartine Hotel</strong>. На сторінці входу натисніть <strong>Гостьовий вхід</strong> і введіть <strong>номер кімнати</strong> та <strong>дату народження</strong>." },
+      cafe: { eyebrow: "Le Rêve Café", title: "Післяобідній чай", body: "Наше кафе за лобі — <strong>безкоштовне</strong> для всіх гостей. Традиційний післяобідній чай подається щодня з <strong>14:00 до 15:00</strong>." },
+      safebox: { eyebrow: "Сейф", title: "Безпечне зберігання", body: "У кожному номері є сейф розміром з ноутбук. Будь ласка, зберігайте цінні речі всередині." },
+      smoking: { eyebrow: "Куріння", title: "Не курити", body: "Lamartine Hotel — <strong>будівля для некурців</strong>. Зона для куріння — біля головного входу. Le Rêve Garden — бездимна зона." },
+      transfer: { eyebrow: "Трансфер з аеропорту", title: "Послуга трансферу", body: "Бронювання на рецепції.<br/>Аеропорт Стамбул в один бік: <strong>70 €</strong><br/>Сабіха Гьокчен в один бік: <strong>80 €</strong>" },
+      sustain: { eyebrow: "Сталий розвиток", title: "За кращий світ", body: "Ми дотримуємось найвищих стандартів екологічної відповідальності та сталості. Допоможіть нам, дотримуючись інструкцій на листі сталості в номері." },
+      breakfast: { eyebrow: "Сніданок", title: "Гарний початок дня", body: "Сніданок подається щоранку в ці години.", weekday: "Будні", weekend: "Вихідні" },
+      amenities: { eyebrow: "Зручності номера", title: "Наші компліменти", subtitle: "Вода, чай і кава", body: "Усі частування у номері <strong>безкоштовні</strong> та щодня поповнюються." },
+      personal: { eyebrow: "Особисті потреби", title: "На запит", body: "Засоби особистої гігієни, такі як зубна щітка та бритвений набір, не надаються. За потреби зателефонуйте на <strong>рецепцію (9)</strong>." },
+      cleaning: { eyebrow: "Прибирання", title: "Прибирання номера", body: "Якщо хочете прибрати номер, у ці години натисніть <strong>відповідну кнопку біля дверей</strong>." },
+      laundry: { eyebrow: "Пральня", title: "Послуга пральні", body: "Заповніть <strong>форму в шафі</strong> і зателефонуйте на рецепцію. Решту ми зробимо самі." },
+      bar: { eyebrow: "Лобі-бар", title: "Приємна пауза", body: "Щоб випити чи відпочити, будемо раді вас бачити в нашому <strong>барі на лобі поверсі</strong>.", menu: "Переглянути меню" },
+      checkout: { eyebrow: "Виїзд", title: "Виїзд з готелю", body: "Час виїзду — <strong>12:00</strong>. Для пізнього виїзду звертайтеся на рецепцію." },
+      metro: { eyebrow: "Транспорт", title: "Карта метро", body: "Натисніть нижче, щоб переглянути карту рейкового транспорту Стамбула.", open: "Відкрити карту" },
+      farewell: { eyebrow: "Дякуємо", title: "Приємного перебування", body: "Нам приємно вас приймати. Бажаємо чудового перебування." }
+    },
+    pl: {
+      scroll: "Przewiń",
+      welcome: { eyebrow: "Informacje dla gości", title: "Witamy", subtitle: "w Lamartine Hotel", body: "Z przyjemnością gościmy Państwa. Przewiń w górę, aby uzyskać informacje, które uczynią pobyt przyjemniejszym." },
+      contact: { eyebrow: "Kontakt i wsparcie", title: "Recepcja", body: "Recepcja pod numerem wewnętrznym <strong>9</strong>. W razie potrzeby lub po lokalne porady o Stambule jesteśmy dostępni <strong>24/7</strong>." },
+      wifi: { eyebrow: "Wi-Fi", title: "Połącz się", body: "Połącz się z siecią <strong>Lamartine Hotel</strong>. Na stronie logowania kliknij <strong>Logowanie gościa</strong> i podaj <strong>numer pokoju</strong> oraz <strong>datę urodzenia</strong>." },
+      cafe: { eyebrow: "Le Rêve Café", title: "Popołudniowa herbata", body: "Nasza kawiarnia za lobby jest <strong>bezpłatna</strong> dla wszystkich gości. Tradycyjna popołudniowa herbata serwowana codziennie <strong>14:00 — 15:00</strong>." },
+      safebox: { eyebrow: "Sejf", title: "Bezpieczne przechowywanie", body: "Każdy pokój ma sejf wielkości laptopa. Prosimy przechowywać wartościowe rzeczy w środku." },
+      smoking: { eyebrow: "Palenie", title: "Zakaz palenia", body: "Lamartine Hotel to <strong>budynek dla niepalących</strong>. Strefa palenia znajduje się obok głównego wejścia. Le Rêve Garden to strefa wolna od dymu." },
+      transfer: { eyebrow: "Transfer z lotniska", title: "Usługa transferu", body: "Rezerwacja w recepcji.<br/>Lotnisko Stambuł w jedną stronę: <strong>70 €</strong><br/>Sabiha Gökçen w jedną stronę: <strong>80 €</strong>" },
+      sustain: { eyebrow: "Zrównoważoność", title: "Lepszy świat", body: "Stosujemy najwyższe standardy odpowiedzialności środowiskowej i zrównoważoności. Wesprzyj nas, stosując się do wskazówek na karcie zrównoważoności w pokoju." },
+      breakfast: { eyebrow: "Śniadanie", title: "Dobry początek dnia", body: "Śniadanie serwowane jest codziennie rano w tych godzinach.", weekday: "Dni powszednie", weekend: "Weekend" },
+      amenities: { eyebrow: "Udogodnienia w pokoju", title: "Nasze komplementy", subtitle: "Woda, herbata i kawa", body: "Wszystkie napoje w pokoju są <strong>bezpłatne</strong> i uzupełniane codziennie." },
+      personal: { eyebrow: "Akcesoria osobiste", title: "Na życzenie", body: "Artykuły higieny osobistej, takie jak szczoteczka i zestaw do golenia, nie są w pokoju. W razie potrzeby zadzwoń do <strong>recepcji (9)</strong>." },
+      cleaning: { eyebrow: "Sprzątanie", title: "Sprzątanie pokoju", body: "Jeśli chcesz, aby posprzątano pokój, w tych godzinach naciśnij <strong>odpowiedni przycisk obok drzwi</strong>." },
+      laundry: { eyebrow: "Pralnia", title: "Usługa prania", body: "Wypełnij <strong>formularz w szafie</strong> i zadzwoń do recepcji. Resztą się zajmiemy." },
+      bar: { eyebrow: "Lobby Bar", title: "Miła chwila odpoczynku", body: "Na drinka lub chwilę relaksu zapraszamy do naszego <strong>baru na poziomie lobby</strong>.", menu: "Zobacz menu" },
+      checkout: { eyebrow: "Wymeldowanie", title: "Wymeldowanie", body: "Wymeldowanie do <strong>12:00</strong>. W sprawie późniejszego wymeldowania prosimy o kontakt z recepcją." },
+      metro: { eyebrow: "Transport", title: "Mapa metra", body: "Dotknij poniżej, aby zobaczyć mapę kolei Stambułu.", open: "Otwórz mapę" },
+      farewell: { eyebrow: "Dziękujemy", title: "Miłego pobytu", body: "To dla nas przyjemność gościć Państwa. Życzymy cudownego pobytu." }
+    },
+    ro: {
+      scroll: "Derulează",
+      welcome: { eyebrow: "Informații pentru oaspeți", title: "Bine ați venit", subtitle: "la Lamartine Hotel", body: "Ne face plăcere să vă găzduim. Derulați în sus pentru informații care vă vor face șederea mai plăcută." },
+      contact: { eyebrow: "Contact și asistență", title: "Recepție", body: "Recepția se află la interiorul <strong>9</strong>. Pentru orice nevoie sau sfaturi locale despre Istanbul, suntem disponibili <strong>24/7</strong>." },
+      wifi: { eyebrow: "Wi-Fi", title: "Conectați-vă", body: "Conectați-vă la rețeaua <strong>Lamartine Hotel</strong>. Pe pagina de autentificare apăsați <strong>Acces oaspeți</strong> și introduceți <strong>numărul camerei</strong> și <strong>data nașterii</strong>." },
+      cafe: { eyebrow: "Le Rêve Café", title: "Ceaiul de după-amiază", body: "Cafeneaua noastră, în spatele lobby-ului, este <strong>gratuită</strong> pentru toți oaspeții. Ceaiul tradițional se servește zilnic între <strong>14:00 — 15:00</strong>." },
+      safebox: { eyebrow: "Seif", title: "Depozitare sigură", body: "Fiecare cameră are un seif de mărimea unui laptop. Vă rugăm să păstrați obiectele de valoare înăuntru." },
+      smoking: { eyebrow: "Fumat", title: "Nefumători", body: "Lamartine Hotel este o clădire <strong>pentru nefumători</strong>. Colțul pentru fumat este lângă intrarea principală. Le Rêve Garden este zonă pentru nefumători." },
+      transfer: { eyebrow: "Transfer aeroport", title: "Serviciu transfer", body: "Rezervare la recepție.<br/>Aeroport Istanbul dus: <strong>70 €</strong><br/>Sabiha Gökçen dus: <strong>80 €</strong>" },
+      sustain: { eyebrow: "Sustenabilitate", title: "O lume mai bună", body: "Urmăm cele mai înalte standarde de responsabilitate de mediu și sustenabilitate. Vă rugăm să ne sprijiniți urmând instrucțiunile de pe foaia de sustenabilitate din cameră." },
+      breakfast: { eyebrow: "Mic dejun", title: "Un început frumos", body: "Micul dejun se servește în fiecare dimineață în acest interval orar.", weekday: "Zile lucrătoare", weekend: "Weekend" },
+      amenities: { eyebrow: "Facilități cameră", title: "Atențiile noastre", subtitle: "Apă, ceai și cafea", body: "Toate băuturile din camera dvs. sunt <strong>gratuite</strong> și se completează zilnic." },
+      personal: { eyebrow: "Articole personale", title: "La cerere", body: "Articolele de igienă personală precum periuța de dinți și kitul de bărbierit nu se află în cameră. Dacă aveți nevoie, sunați la <strong>recepție (9)</strong>." },
+      cleaning: { eyebrow: "Curățenie", title: "Curățenia camerei", body: "Dacă doriți curățenie, în acest interval orar apăsați <strong>butonul corespunzător de lângă ușă</strong>." },
+      laundry: { eyebrow: "Spălătorie", title: "Serviciu spălătorie", body: "Completați <strong>formularul din dulap</strong> și sunați la recepție. Noi ne ocupăm de rest." },
+      bar: { eyebrow: "Lobby Bar", title: "O pauză plăcută", body: "Pentru o băutură sau un moment de relaxare, vă așteptăm cu plăcere în <strong>barul din lobby</strong>.", menu: "Vezi meniul" },
+      checkout: { eyebrow: "Check-out", title: "Plecare", body: "Ora de check-out este <strong>12:00</strong>. Pentru check-out târziu, vă rugăm să contactați recepția." },
+      metro: { eyebrow: "Transport", title: "Harta metroului", body: "Apăsați mai jos pentru a vedea harta sistemului feroviar din Istanbul.", open: "Deschide harta" },
+      farewell: { eyebrow: "Mulțumim", title: "Ședere plăcută", body: "Ne face plăcere să vă găzduim. Vă dorim o ședere minunată." }
+    },
+    nl: {
+      scroll: "Scrollen",
+      welcome: { eyebrow: "Gasteninformatie", title: "Welkom", subtitle: "in Lamartine Hotel", body: "Wij heten u graag welkom. Scroll naar boven voor informatie die uw verblijf aangenamer maakt." },
+      contact: { eyebrow: "Contact en ondersteuning", title: "Receptie", body: "De receptie is bereikbaar op intern nummer <strong>9</strong>. Voor elke behoefte of lokale tips over Istanbul zijn wij <strong>24/7</strong> beschikbaar." },
+      wifi: { eyebrow: "Wi-Fi", title: "Maak verbinding", body: "Verbind met het netwerk <strong>Lamartine Hotel</strong>. Op de inlogpagina tikt u op <strong>Gastlogin</strong> en voert u uw <strong>kamernummer</strong> en <strong>geboortedatum</strong> in." },
+      cafe: { eyebrow: "Le Rêve Café", title: "Middagthee", body: "Ons café achter de lobby is <strong>gratis</strong> voor alle gasten. Traditionele middagthee wordt dagelijks geserveerd <strong>14:00 — 15:00</strong>." },
+      safebox: { eyebrow: "Kluis", title: "Veilige opslag", body: "Elke kamer heeft een kluis ter grootte van een laptop. Bewaar waardevolle spullen erin." },
+      smoking: { eyebrow: "Roken", title: "Niet-roken", body: "Lamartine Hotel is een <strong>rookvrij gebouw</strong>. De rookhoek bevindt zich naast de hoofdingang. Le Rêve Garden is een rookvrije zone." },
+      transfer: { eyebrow: "Luchthaventransfer", title: "Transferservice", body: "Reservering bij de receptie.<br/>Istanbul Airport enkele reis: <strong>70 €</strong><br/>Sabiha Gökçen enkele reis: <strong>80 €</strong>" },
+      sustain: { eyebrow: "Duurzaamheid", title: "Een betere wereld", body: "Wij volgen de hoogste normen voor milieuverantwoordelijkheid en duurzaamheid. Steun ons door de richtlijnen op het duurzaamheidsblad in uw kamer te volgen." },
+      breakfast: { eyebrow: "Ontbijt", title: "Een goede start", body: "Het ontbijt wordt elke ochtend op deze tijden geserveerd.", weekday: "Doordeweeks", weekend: "Weekend" },
+      amenities: { eyebrow: "Kamerextra's", title: "Onze attenties", subtitle: "Water, thee en koffie", body: "Alle dranken op uw kamer zijn <strong>gratis</strong> en worden dagelijks aangevuld." },
+      personal: { eyebrow: "Persoonlijke spullen", title: "Op verzoek", body: "Persoonlijke hygiëneartikelen zoals tandenborstel en scheerset zijn niet op de kamer. Bel bij behoefte naar de <strong>receptie (9)</strong>." },
+      cleaning: { eyebrow: "Kamerschoonmaak", title: "Schoonmaak", body: "Wilt u dat uw kamer schoongemaakt wordt, druk in deze uren op de <strong>bijbehorende knop naast uw deur</strong>." },
+      laundry: { eyebrow: "Wasserij", title: "Wasservice", body: "Vul het <strong>formulier in uw kast</strong> in en bel de receptie. Wij regelen de rest." },
+      bar: { eyebrow: "Lobby Bar", title: "Een prettige pauze", body: "Voor een drankje of een moment van ontspanning verwelkomen wij u graag in onze <strong>bar in de lobby</strong>.", menu: "Bekijk menu" },
+      checkout: { eyebrow: "Uitchecken", title: "Uitchecken", body: "De uitchecktijd is <strong>12:00</strong>. Voor late uitcheck, neem contact op met de receptie." },
+      metro: { eyebrow: "Vervoer", title: "Metrokaart", body: "Tik hieronder om de spoorkaart van Istanbul te bekijken.", open: "Open kaart" },
+      farewell: { eyebrow: "Bedankt", title: "Geniet van uw verblijf", body: "Het is ons een genoegen u te ontvangen. Wij wensen u een heerlijk verblijf." }
+    }
+  };
+
+  // Categories & İstanbul places — names stay Turkish (proper nouns).
+  const CATEGORIES = [
+    { id: "museums", icon: "🏛️", places: [
+      { name: "Topkapı Sarayı", district: "Sultanahmet" },
+      { name: "Ayasofya", district: "Sultanahmet" },
+      { name: "Dolmabahçe Sarayı", district: "Beşiktaş" },
+      { name: "İstanbul Arkeoloji Müzeleri", district: "Sultanahmet" },
+      { name: "İstanbul Modern", district: "Galataport" },
+      { name: "Pera Müzesi", district: "Tepebaşı" },
+      { name: "Yerebatan Sarnıcı", district: "Sultanahmet" },
+      { name: "Sakıp Sabancı Müzesi", district: "Emirgan" },
+      { name: "Rahmi M. Koç Müzesi", district: "Hasköy" }
+    ]},
+    { id: "historic", icon: "🕌", places: [
+      { name: "Sultanahmet Camii", district: "Sultanahmet" },
+      { name: "Süleymaniye Camii", district: "Fatih" },
+      { name: "Galata Kulesi", district: "Beyoğlu" },
+      { name: "Kapalıçarşı", district: "Beyazıt" },
+      { name: "Mısır Çarşısı", district: "Eminönü" },
+      { name: "Rumeli Hisarı", district: "Sarıyer" },
+      { name: "Kız Kulesi", district: "Üsküdar" },
+      { name: "Çırağan Sarayı", district: "Beşiktaş" }
+    ]},
+    { id: "restaurants", icon: "🍽️", places: [
+      { name: "Mikla", district: "Beyoğlu" },
+      { name: "Neolokal", district: "Karaköy" },
+      { name: "Çiya Sofrası", district: "Kadıköy" },
+      { name: "Karaköy Lokantası", district: "Karaköy" },
+      { name: "Hamdi Restaurant", district: "Eminönü" },
+      { name: "Balıkçı Sabahattin", district: "Sultanahmet" },
+      { name: "Pandeli", district: "Eminönü" },
+      { name: "Lokanta Maya", district: "Karaköy" }
+    ]},
+    { id: "cafes", icon: "☕", places: [
+      { name: "Karabatak", district: "Karaköy" },
+      { name: "Kronotrop", district: "Cihangir" },
+      { name: "Federal Coffee", district: "Galata" },
+      { name: "Mandabatmaz", district: "Beyoğlu" },
+      { name: "Petra Roasting Co.", district: "Nişantaşı" },
+      { name: "Norm Coffee", district: "Kadıköy" },
+      { name: "Walter's Coffee Roastery", district: "Kadıköy" }
+    ]},
+    { id: "bosphorus", icon: "⛵", places: [
+      { name: "Ortaköy Meydanı", district: "Beşiktaş" },
+      { name: "Bebek Sahili", district: "Beşiktaş" },
+      { name: "Arnavutköy", district: "Beşiktaş" },
+      { name: "Kuruçeşme", district: "Beşiktaş" },
+      { name: "Emirgan Sahili", district: "Sarıyer" },
+      { name: "Anadolu Kavağı", district: "Beykoz" },
+      { name: "Kanlıca", district: "Beykoz" }
+    ]},
+    { id: "beaches", icon: "🏖️", places: [
+      { name: "Solar Beach", district: "Kilyos" },
+      { name: "Suma Beach", district: "Kilyos" },
+      { name: "Burc Beach", district: "Kilyos" },
+      { name: "Dalia Beach", district: "Kilyos" },
+      { name: "Şile Plajı", district: "Şile" },
+      { name: "Ağva", district: "Şile" }
+    ]},
+    { id: "shopping", icon: "🛍️", places: [
+      { name: "İstinye Park", district: "Sarıyer" },
+      { name: "Zorlu Center", district: "Beşiktaş" },
+      { name: "Kanyon", district: "Levent" },
+      { name: "Galataport", district: "Karaköy" },
+      { name: "İstiklal Caddesi", district: "Beyoğlu" },
+      { name: "Akasya AVM", district: "Üsküdar" }
+    ]},
+    { id: "parks", icon: "🌳", places: [
+      { name: "Emirgan Korusu", district: "Sarıyer" },
+      { name: "Yıldız Parkı", district: "Beşiktaş" },
+      { name: "Gülhane Parkı", district: "Sultanahmet" },
+      { name: "Maçka Demokrasi Parkı", district: "Şişli" },
+      { name: "Fenerbahçe Parkı", district: "Kadıköy" },
+      { name: "Belgrad Ormanı", district: "Sarıyer" }
+    ]},
+    { id: "spa", icon: "🧖", places: [
+      { name: "Cemberlitas Hamamı", district: "Çemberlitaş" },
+      { name: "Çağaloğlu Hamamı", district: "Fatih" },
+      { name: "Süleymaniye Hamamı", district: "Süleymaniye" },
+      { name: "Ayasofya Hürrem Sultan Hamamı", district: "Sultanahmet" },
+      { name: "Kılıç Ali Paşa Hamamı", district: "Tophane" },
+      { name: "Galatasaray Hamamı", district: "Beyoğlu" },
+      { name: "Mihrimah Sultan Hamamı", district: "Üsküdar" },
+      { name: "Caudalie Vinothérapie Spa", district: "Beşiktaş" },
+      { name: "Four Seasons Spa", district: "Beşiktaş" },
+      { name: "Çırağan Palace Spa", district: "Beşiktaş" }
+    ]},
+    { id: "exchange", icon: "💱", places: [
+      { name: "Ünlü Döviz", district: "Taksim" },
+      { name: "Varlık Döviz", district: "Taksim" },
+      { name: "Özgenç Döviz", district: "Taksim" },
+      { name: "Taksim Döviz", district: "Taksim" },
+      { name: "Sultan Döviz", district: "Taksim" },
+      { name: "Kent Döviz", district: "Beyoğlu" },
+      { name: "Atlas Döviz", district: "Beyoğlu" },
+      { name: "Bamka Döviz", district: "Taksim" }
+    ]},
+    { id: "atms", icon: "🏧", places: [
+      { name: "Ziraat Bankası ATM", district: "Taksim" },
+      { name: "İş Bankası ATM", district: "Taksim" },
+      { name: "Garanti BBVA ATM", district: "Taksim" },
+      { name: "Yapı Kredi ATM", district: "Taksim" },
+      { name: "Akbank ATM", district: "Taksim" },
+      { name: "QNB Finansbank ATM", district: "Taksim" },
+      { name: "Denizbank ATM", district: "Taksim" },
+      { name: "Halkbank ATM", district: "Taksim" },
+      { name: "Vakıfbank ATM", district: "Taksim" },
+      { name: "ING Bank ATM", district: "Taksim" }
+    ]}
+  ];
+
+  const EXPLORE_I18N = {
+    tr: { cta: "İstanbul'u Keşfet", eyebrow: "KEŞFET", title: "İstanbul'u Keşfedin", body: "Otelimize yakın öne çıkan mekânlar.", note: "Yol tarifi veya tavsiye için resepsiyonu (9) arayabilirsiniz.", cats: { museums: "Müzeler", historic: "Tarihi Yerler", restaurants: "Restoranlar", cafes: "Kafeler", bosphorus: "Boğaz & Sahil", beaches: "Plajlar", shopping: "Alışveriş", parks: "Parklar", spa: "Spa & Hamam", exchange: "Döviz Büroları", atms: "ATM'ler" }},
+    en: { cta: "Discover Istanbul", eyebrow: "EXPLORE", title: "Discover Istanbul", body: "Notable places close to our hotel.", note: "For directions or recommendations, please call reception (9).", cats: { museums: "Museums", historic: "Historic Sites", restaurants: "Restaurants", cafes: "Cafés", bosphorus: "Bosphorus", beaches: "Beaches", shopping: "Shopping", parks: "Parks", spa: "Spa & Hammam", exchange: "Currency Exchange", atms: "ATMs" }},
+    ar: { cta: "اكتشف إسطنبول", eyebrow: "اكتشف", title: "اكتشف إسطنبول", body: "أماكن مميزة قريبة من فندقنا.", note: "للاتجاهات أو التوصيات، يرجى الاتصال بالاستقبال (9).", cats: { museums: "المتاحف", historic: "أماكن تاريخية", restaurants: "المطاعم", cafes: "المقاهي", bosphorus: "البوسفور", beaches: "الشواطئ", shopping: "التسوق", parks: "الحدائق", spa: "سبا وحمام", exchange: "مكاتب الصرافة", atms: "أجهزة الصراف الآلي" }},
+    ru: { cta: "Откройте Стамбул", eyebrow: "ИССЛЕДОВАТЬ", title: "Откройте Стамбул", body: "Знаковые места рядом с нашим отелем.", note: "Для маршрута или рекомендаций звоните на ресепшн (9).", cats: { museums: "Музеи", historic: "Исторические места", restaurants: "Рестораны", cafes: "Кафе", bosphorus: "Босфор", beaches: "Пляжи", shopping: "Шопинг", parks: "Парки", spa: "Спа и хаммам", exchange: "Обмен валют", atms: "Банкоматы" }},
+    de: { cta: "Istanbul Entdecken", eyebrow: "ENTDECKEN", title: "Istanbul Entdecken", body: "Besondere Orte in der Nähe unseres Hotels.", note: "Für Wegbeschreibungen oder Empfehlungen rufen Sie gerne die Rezeption (9) an.", cats: { museums: "Museen", historic: "Historische Orte", restaurants: "Restaurants", cafes: "Cafés", bosphorus: "Bosporus", beaches: "Strände", shopping: "Shopping", parks: "Parks", spa: "Spa & Hamam", exchange: "Wechselstuben", atms: "Geldautomaten" }},
+    fr: { cta: "Découvrir Istanbul", eyebrow: "EXPLORER", title: "Découvrir Istanbul", body: "Lieux remarquables proches de notre hôtel.", note: "Pour un itinéraire ou des recommandations, appelez la réception (9).", cats: { museums: "Musées", historic: "Sites Historiques", restaurants: "Restaurants", cafes: "Cafés", bosphorus: "Bosphore", beaches: "Plages", shopping: "Shopping", parks: "Parcs", spa: "Spa & Hammam", exchange: "Bureaux de Change", atms: "Distributeurs" }},
+    es: { cta: "Descubre Estambul", eyebrow: "EXPLORAR", title: "Descubre Estambul", body: "Lugares destacados cerca de nuestro hotel.", note: "Para indicaciones o recomendaciones, llame a recepción (9).", cats: { museums: "Museos", historic: "Sitios Históricos", restaurants: "Restaurantes", cafes: "Cafeterías", bosphorus: "Bósforo", beaches: "Playas", shopping: "Compras", parks: "Parques", spa: "Spa y Hamam", exchange: "Casas de Cambio", atms: "Cajeros" }},
+    it: { cta: "Scopri Istanbul", eyebrow: "ESPLORA", title: "Scopri Istanbul", body: "Luoghi notevoli vicino al nostro hotel.", note: "Per indicazioni o consigli, chiamate la reception (9).", cats: { museums: "Musei", historic: "Siti Storici", restaurants: "Ristoranti", cafes: "Caffè", bosphorus: "Bosforo", beaches: "Spiagge", shopping: "Shopping", parks: "Parchi", spa: "Spa & Hammam", exchange: "Cambio Valuta", atms: "Bancomat" }},
+    fa: { cta: "استانبول را کاوش کنید", eyebrow: "کاوش", title: "استانبول را کاوش کنید", body: "مکان‌های برجسته نزدیک به هتل ما.", note: "برای راهنمایی یا توصیه، لطفاً با پذیرش (9) تماس بگیرید.", cats: { museums: "موزه‌ها", historic: "اماکن تاریخی", restaurants: "رستوران‌ها", cafes: "کافه‌ها", bosphorus: "بسفر", beaches: "ساحل‌ها", shopping: "خرید", parks: "پارک‌ها", spa: "اسپا و حمام", exchange: "صرافی", atms: "خودپردازها" }},
+    bg: { cta: "Открийте Истанбул", eyebrow: "ОТКРИЙТЕ", title: "Открийте Истанбул", body: "Забележителни места близо до нашия хотел.", note: "За маршрути или препоръки, моля обадете се на рецепцията (9).", cats: { museums: "Музеи", historic: "Исторически места", restaurants: "Ресторанти", cafes: "Кафенета", bosphorus: "Босфор", beaches: "Плажове", shopping: "Пазаруване", parks: "Паркове", spa: "Спа и хамам", exchange: "Обмяна на валута", atms: "Банкомати" }},
+    ka: { cta: "სტამბოლის აღმოჩენა", eyebrow: "აღმოაჩინე", title: "სტამბოლის აღმოჩენა", body: "ჩვენი სასტუმროს მახლობელი მნიშვნელოვანი ადგილები.", note: "მიმართულებებისთვის ან რეკომენდაციებისთვის, გთხოვთ დაუკავშირდით მიღებას (9).", cats: { museums: "მუზეუმები", historic: "ისტორიული ადგილები", restaurants: "რესტორნები", cafes: "კაფეები", bosphorus: "ბოსფორი", beaches: "პლაჟები", shopping: "სავაჭრო", parks: "პარკები", spa: "სპა და ჰამამი", exchange: "ვალუტის გადაცვლა", atms: "ბანკომატები" }},
+    uk: { cta: "Відкрийте Стамбул", eyebrow: "ВІДКРИЙТЕ", title: "Відкрийте Стамбул", body: "Помітні місця поруч з нашим готелем.", note: "Для маршрутів чи рекомендацій телефонуйте на рецепцію (9).", cats: { museums: "Музеї", historic: "Історичні місця", restaurants: "Ресторани", cafes: "Кафе", bosphorus: "Босфор", beaches: "Пляжі", shopping: "Шопінг", parks: "Парки", spa: "Спа і хамам", exchange: "Обмін валют", atms: "Банкомати" }},
+    pl: { cta: "Odkryj Stambuł", eyebrow: "ODKRYJ", title: "Odkryj Stambuł", body: "Wybitne miejsca blisko naszego hotelu.", note: "Po wskazówki lub rekomendacje zadzwoń do recepcji (9).", cats: { museums: "Muzea", historic: "Miejsca historyczne", restaurants: "Restauracje", cafes: "Kawiarnie", bosphorus: "Bosfor", beaches: "Plaże", shopping: "Zakupy", parks: "Parki", spa: "Spa i hammam", exchange: "Kantor", atms: "Bankomaty" }},
+    ro: { cta: "Descoperă Istanbul", eyebrow: "DESCOPERĂ", title: "Descoperă Istanbul", body: "Locuri remarcabile aproape de hotelul nostru.", note: "Pentru indicații sau recomandări, sunați la recepție (9).", cats: { museums: "Muzee", historic: "Locuri istorice", restaurants: "Restaurante", cafes: "Cafenele", bosphorus: "Bosfor", beaches: "Plaje", shopping: "Cumpărături", parks: "Parcuri", spa: "Spa și hamam", exchange: "Schimb valutar", atms: "Bancomate" }},
+    nl: { cta: "Ontdek Istanbul", eyebrow: "ONTDEK", title: "Ontdek Istanbul", body: "Bijzondere plekken bij ons hotel.", note: "Voor routes of aanbevelingen, bel de receptie (9).", cats: { museums: "Musea", historic: "Historische plekken", restaurants: "Restaurants", cafes: "Cafés", bosphorus: "Bosporus", beaches: "Stranden", shopping: "Winkelen", parks: "Parken", spa: "Spa & Hammam", exchange: "Wisselkantoor", atms: "Geldautomaten" }}
+  };
+
+  let activeCategory = "museums";
+
+  function renderExplore(lang) {
+    const e = EXPLORE_I18N[lang] || EXPLORE_I18N.en;
+    document.getElementById('exploreEyebrow').textContent = e.eyebrow;
+    document.getElementById('exploreTitle').textContent = e.title;
+    document.getElementById('exploreTitleSmall').textContent = e.title;
+    document.getElementById('exploreBody').textContent = e.body;
+    document.getElementById('receptionNoteText').textContent = e.note;
+
+    const catBar = document.getElementById('catBar');
+    catBar.innerHTML = '';
+    CATEGORIES.forEach(cat => {
+      const pill = document.createElement('button');
+      pill.className = 'cat-pill' + (cat.id === activeCategory ? ' active' : '');
+      pill.dataset.cat = cat.id;
+      pill.innerHTML = `<span>${cat.icon}</span><span>${e.cats[cat.id]}</span>`;
+      pill.addEventListener('click', () => {
+        activeCategory = cat.id;
+        renderExplore(lang);
+        document.getElementById('places').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      catBar.appendChild(pill);
+    });
+
+    const places = document.getElementById('places');
+    places.innerHTML = '';
+    const cat = CATEGORIES.find(c => c.id === activeCategory) || CATEGORIES[0];
+    cat.places.forEach(p => {
+      const a = document.createElement('a');
+      a.className = 'place';
+      a.href = 'https://www.google.com/maps/dir/?api=1'
+        + '&origin=' + encodeURIComponent('Lamartine Hotel, Taksim, İstanbul')
+        + '&destination=' + encodeURIComponent(p.name + ', ' + p.district + ', İstanbul')
+        + '&travelmode=transit';
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.innerHTML = `
+        <div class="place-info">
+          <div class="place-name">${p.name}</div>
+          <div class="place-district">${p.district}</div>
+        </div>
+        <div class="place-icon">↗</div>`;
+      places.appendChild(a);
+    });
+  }
+
+  function openExplore() {
+    const el = document.getElementById('explore');
+    el.classList.add('open');
+    el.setAttribute('aria-hidden', 'false');
+    el.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeExplore() {
+    const el = document.getElementById('explore');
+    el.classList.remove('open');
+    el.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('closeExplore').addEventListener('click', closeExplore);
+
+  function openMetro() {
+    const el = document.getElementById('metroOverlay');
+    el.classList.add('open');
+    el.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    // Center the large image in the scroll viewport
+    requestAnimationFrame(() => {
+      const stage = document.getElementById('metroStage');
+      const img = document.getElementById('metroImg');
+      stage.scrollLeft = Math.max(0, (img.scrollWidth - stage.clientWidth) / 2);
+      stage.scrollTop = Math.max(0, (img.scrollHeight - stage.clientHeight) / 2);
+    });
+  }
+  function closeMetro() {
+    const el = document.getElementById('metroOverlay');
+    el.classList.remove('open');
+    el.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('closeMetro').addEventListener('click', closeMetro);
+
+  function openMenu() {
+    const el = document.getElementById('menuOverlay');
+    el.classList.add('open');
+    el.setAttribute('aria-hidden', 'false');
+    document.getElementById('menuStage').scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    const el = document.getElementById('menuOverlay');
+    el.classList.remove('open');
+    el.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('closeMenu').addEventListener('click', closeMenu);
+
+  function detectLang() {
+    const saved = localStorage.getItem('lang');
+    if (saved && I18N[saved]) return saved;
+    const candidates = [navigator.language, ...(navigator.languages || [])];
+    for (const raw of candidates) {
+      if (!raw) continue;
+      const base = raw.toLowerCase().split('-')[0];
+      if (I18N[base]) return base;
+    }
+    return 'en';
+  }
+
+  function render(lang) {
+    const t = I18N[lang];
+    const meta = LANGS[lang];
+    document.documentElement.lang = lang;
+    document.documentElement.dir = meta.dir;
+
+    const reels = document.getElementById('reels');
+    reels.innerHTML = '';
+
+    SLIDES.forEach((s) => {
+      const data = t[s.id];
+      const section = document.createElement('section');
+      section.className = 'slide';
+
+      const frame = document.createElement('div');
+      frame.className = 'frame';
+      section.appendChild(frame);
+
+      if (s.brand) {
+        const brand = document.createElement('div');
+        brand.className = 'brand';
+        brand.textContent = 'LAMARTINE HOTEL';
+        section.appendChild(brand);
+      }
+
+      const content = document.createElement('div');
+      content.className = 'content';
+
+      const icon = document.createElement('div');
+      icon.className = 'icon';
+      icon.textContent = s.icon;
+      content.appendChild(icon);
+
+      const eyebrow = document.createElement('div');
+      eyebrow.className = 'eyebrow';
+      eyebrow.textContent = data.eyebrow;
+      content.appendChild(eyebrow);
+
+      const h1 = document.createElement('h1');
+      if (s.hero) h1.className = 'hero';
+      h1.textContent = data.title;
+      content.appendChild(h1);
+
+      const orn = document.createElement('div');
+      orn.className = 'ornament';
+      orn.innerHTML = '<span class="line"></span><span class="dot"></span><span class="line"></span>';
+      content.appendChild(orn);
+
+      if (data.subtitle) {
+        const sub = document.createElement('p');
+        sub.className = 'subtitle';
+        sub.textContent = data.subtitle;
+        content.appendChild(sub);
+      }
+
+      if (s.timeRange) {
+        const wrap = document.createElement('div');
+        wrap.className = 'time-block';
+        const renderRange = (label, range) => {
+          const row = document.createElement('div');
+          row.className = 'time-row';
+          if (label) {
+            const lab = document.createElement('div');
+            lab.className = 'time-label';
+            lab.textContent = label;
+            row.appendChild(lab);
+          }
+          const tr = document.createElement('div');
+          tr.className = 'time-range';
+          tr.innerHTML = `<span class="chip">${range[0]}</span><span class="dash"></span><span class="chip">${range[1]}</span>`;
+          row.appendChild(tr);
+          return row;
+        };
+        if (s.weekendTimeRange) {
+          wrap.appendChild(renderRange(data.weekday || '', s.timeRange));
+          wrap.appendChild(renderRange(data.weekend || '', s.weekendTimeRange));
+        } else {
+          wrap.appendChild(renderRange('', s.timeRange));
+        }
+        content.appendChild(wrap);
+      }
+
+      if (s.bigNumber) {
+        const n = document.createElement('div');
+        n.className = 'big-number';
+        n.textContent = s.bigNumber;
+        content.appendChild(n);
+      }
+
+      const body = document.createElement('p');
+      body.className = 'body';
+      body.innerHTML = data.body;
+      content.appendChild(body);
+
+      if (s.heart) {
+        const h = document.createElement('div');
+        h.className = 'heart';
+        h.textContent = '🤍';
+        content.appendChild(h);
+      }
+
+      if (s.mapPreview) {
+        const thumb = document.createElement('button');
+        thumb.className = 'map-thumb';
+        thumb.innerHTML = `
+          <img src="assets/istanbul-metro.png" alt="Istanbul metro map" loading="lazy"/>
+          <span class="map-thumb-overlay">
+            <span class="map-thumb-icon">⛶</span>
+            <span class="map-thumb-label">${data.open}</span>
+          </span>`;
+        thumb.addEventListener('click', openMetro);
+        content.appendChild(thumb);
+      }
+
+      if (s.menuButton) {
+        const btn = document.createElement('button');
+        btn.className = 'cta cta-outline';
+        btn.innerHTML = `<span>${data.menu}</span><span class="arrow">→</span>`;
+        btn.addEventListener('click', openMenu);
+        content.appendChild(btn);
+      }
+
+      if (s.id === 'farewell') {
+        const cta = document.createElement('button');
+        cta.className = 'cta';
+        const ctaLabel = (EXPLORE_I18N[lang] || EXPLORE_I18N.en).cta;
+        cta.innerHTML = `<span>${ctaLabel}</span><span class="arrow">→</span>`;
+        cta.addEventListener('click', openExplore);
+        content.appendChild(cta);
+      }
+
+      if (s.signature) {
+        const sig = document.createElement('div');
+        sig.className = 'signature';
+        sig.textContent = 'LAMARTINE HOTEL';
+        content.appendChild(sig);
+      }
+
+      section.appendChild(content);
+
+      if (s.scrollHint) {
+        const hint = document.createElement('div');
+        hint.className = 'scroll-hint';
+        hint.innerHTML = `<span>${t.scroll}</span><span class="arrow">↑</span>`;
+        section.appendChild(hint);
+      }
+
+      reels.appendChild(section);
+    });
+
+    // update language switcher
+    document.getElementById('langLabel').textContent = meta.code;
+
+    // rebuild progress bars
+    const progress = document.getElementById('progress');
+    progress.innerHTML = '';
+    for (let i = 0; i < SLIDES.length; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      progress.appendChild(bar);
+    }
+    updateProgress();
+
+    // rebuild menu active state
+    document.querySelectorAll('#langMenu button').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+
+    // scroll back to first slide
+    reels.scrollTo({ top: 0, behavior: 'instant' });
+
+    // re-render explore overlay in new language
+    renderExplore(lang);
+  }
+
+  function updateProgress() {
+    const reels = document.getElementById('reels');
+    const bars = document.querySelectorAll('#progress .bar');
+    const idx = Math.round(reels.scrollTop / window.innerHeight);
+    bars.forEach((b, i) => b.classList.toggle('active', i <= idx));
+  }
+
+  // Build language menu
+  const langMenu = document.getElementById('langMenu');
+  Object.entries(LANGS).forEach(([code, info]) => {
+    const btn = document.createElement('button');
+    btn.dataset.lang = code;
+    btn.textContent = info.name;
+    btn.addEventListener('click', () => {
+      localStorage.setItem('lang', code);
+      render(code);
+      langMenu.classList.remove('open');
+    });
+    langMenu.appendChild(btn);
+  });
+
+  document.getElementById('langSwitch').addEventListener('click', (e) => {
+    e.stopPropagation();
+    langMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', () => langMenu.classList.remove('open'));
+
+  // Initial render
+  const currentLang = detectLang();
+  render(currentLang);
+
+  // Bind scroll + keys after first render
+  document.getElementById('reels').addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+
+  document.addEventListener('keydown', (e) => {
+    const reels = document.getElementById('reels');
+    const h = window.innerHeight;
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault();
+      reels.scrollBy({ top: h, behavior: 'smooth' });
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      reels.scrollBy({ top: -h, behavior: 'smooth' });
+    }
+  });
+</script>
+
+</body>
+</html>
