@@ -1350,6 +1350,120 @@
   }
   .bundle-pricing .btn { margin-top: 6px; }
 
+  /* PHOTO BAND — tek seferlik fotoğraf çekimi */
+  .photo-band {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 60px;
+    align-items: center;
+    padding: 48px 56px;
+    border-radius: 28px;
+    background:
+      radial-gradient(ellipse at 85% 15%, rgba(216, 189, 134, 0.4), transparent 55%),
+      radial-gradient(ellipse at 15% 85%, rgba(184, 152, 90, 0.18), transparent 55%),
+      linear-gradient(135deg, #f8efd9 0%, #f1ece1 50%, #ece0bf 100%);
+    color: var(--ink);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -25px rgba(154, 125, 68, 0.35), inset 0 0 0 1px rgba(184, 152, 90, 0.2);
+  }
+  .photo-band::before {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.5), transparent 60%);
+    pointer-events: none;
+    border-radius: 50%;
+  }
+  .photo-meta { position: relative; z-index: 1; }
+  .photo-meta .kicker { color: var(--gold-deep); margin-bottom: 16px; }
+  .photo-meta h3 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(26px, 2.6vw, 34px);
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 14px;
+    letter-spacing: -0.015em;
+    font-variation-settings: "opsz" 60;
+    line-height: 1.15;
+  }
+  .photo-meta h3 em { font-style: italic; color: var(--gold-deep); font-weight: 400; }
+  .photo-meta p {
+    color: var(--ink-dim);
+    font-size: 15.5px;
+    max-width: 480px;
+    line-height: 1.55;
+    margin-bottom: 22px;
+  }
+  .photo-features {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+    padding: 0;
+    margin: 0;
+  }
+  .photo-features li {
+    font-size: 13.5px;
+    color: var(--ink);
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.4;
+  }
+  .photo-features li::before {
+    content: '✦';
+    position: absolute;
+    left: 0;
+    color: var(--gold-deep);
+    font-size: 10px;
+    top: 4px;
+  }
+
+  .photo-pricing {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+  }
+  .photo-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    font-weight: 600;
+  }
+  .photo-amount {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(48px, 5vw, 64px);
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.025em;
+    line-height: 0.9;
+    font-variation-settings: "opsz" 144;
+    display: flex;
+    align-items: baseline;
+  }
+  .photo-from {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--ink-dim);
+    margin-right: 8px;
+    font-variation-settings: "opsz" 36;
+  }
+  .photo-per {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--ink-dim);
+    letter-spacing: 0.02em;
+  }
+  .photo-pricing .btn { margin-top: 6px; }
+
   /* QUOTE */
   .quote { background: var(--cream); padding: 80px 0; }
   .quote-card {
@@ -1706,6 +1820,15 @@
     }
     .bundle-pricing { align-items: flex-start; }
     .bundle-pricing .btn { align-self: stretch; justify-content: center; }
+    .photo-band {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      padding: 36px 28px;
+      margin-top: 24px;
+    }
+    .photo-features { grid-template-columns: 1fr; gap: 6px; }
+    .photo-pricing { align-items: flex-start; }
+    .photo-pricing .btn { align-self: stretch; justify-content: center; }
     .quote-card { padding: 70px 30px 50px; border-radius: 24px; }
     .quote-mark-deco { font-size: 80px; top: 18px; }
     .brand-statement { padding: 80px 0 70px; }
@@ -2174,7 +2297,29 @@
         </article>
       </div>
 
-      <p class="price-note">Tüm planlar KDV hariçtir. İptal koşulsuz, ön ödeme yok.</p>
+      <div class="photo-band reveal">
+        <div class="photo-meta">
+          <span class="kicker">Profesyonel çekim</span>
+          <h3>Misafir önce <em>fotoğrafa</em> bakar.</h3>
+          <p>Booking'de 30 otel arasından üç saniyede seçim yapar. O üç saniyede gördüğü ışık, doku ve atmosfer kararını verir — telefonla yakalanmayan şey.</p>
+          <ul class="photo-features">
+            <li>1 günlük yerinde çekim</li>
+            <li>50+ retouching'li kare</li>
+            <li>Oda · lobi · restoran · dış cephe</li>
+            <li>Drone çekimi dahil</li>
+            <li>Web ve sosyal medya boyutları</li>
+            <li>14 gün içinde teslim</li>
+          </ul>
+        </div>
+        <div class="photo-pricing">
+          <span class="photo-tag">Tek seferlik</span>
+          <span class="photo-amount"><span class="photo-from">₺</span>15.000</span>
+          <span class="photo-per">KDV hariç</span>
+          <a href="mailto:buraksaritas1283@gmail.com?subject=Otel%20Foto%C4%9Fraf%20%C3%87ekimi" class="btn btn-dark">Çekim Talep Et</a>
+        </div>
+      </div>
+
+      <p class="price-note">Tüm planlar KDV hariçtir. İptal koşulsuz, ön ödeme yok. Web Sitesi veya Bundle alanlara fotoğraf çekiminde <strong>₺3.000 indirim</strong>.</p>
     </div>
   </section>
 
